@@ -80,8 +80,8 @@ namespace FloraMind_V1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Title,Body,PlantID")] Content content)
         {
-           
-            content.UserID = 1; 
+
+            content.UserID = GetLoggedInUserId(); 
 
             ModelState.Remove("UserID");
             ModelState.Remove("User"); 

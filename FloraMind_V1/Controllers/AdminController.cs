@@ -54,7 +54,7 @@ public class AdminController : Controller
     }
 
 
-    
+    //kullanıcı hesaplarını askıya alma işlemleri
 
     [HttpPost]
     [ValidateAntiForgeryToken] 
