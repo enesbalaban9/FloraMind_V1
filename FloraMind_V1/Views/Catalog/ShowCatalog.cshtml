@@ -1,0 +1,52 @@
+﻿@model IEnumerable<FloraMind_V1.Models.Plant>
+@{
+    ViewData["Title"] = "Bitki Kataloğu";
+}
+
+<link rel="stylesheet" href="~/css/ShowCatalog.css" />
+
+<h2 class="page-title">Bitki Kataloğu</h2>
+
+<div class="card-container">
+	
+            @foreach (var item in Model)
+            {
+                <div class="plant-card">
+                    <div class="image-wrapper">
+
+                        <img src="">
+
+                    </div>
+                    
+                    <div class="card-body">
+                        <h3>@item.Name</h3>
+
+                        <ul>
+                            <li><strong>Tür:</strong> @item.Species</li>
+              
+                        </ul>
+
+                        <button class="info-btn">Bilgi</button>
+
+                        <div class="card-info">
+                            <p></p>
+
+                            <button class="save-btn">
+                                🌱 Bitkilerime Kaydet
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+</div>
+
+<script>
+    document.querySelectorAll('.info-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const card = this.closest('.plant-card');
+            card.classList.toggle('active');
+        });
+    });
+</script>

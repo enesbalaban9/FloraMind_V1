@@ -4,10 +4,11 @@
     box-sizing: border-box;
 }
 
+
 body {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    min-height: 100vh;
 }
 
 html, body {
@@ -22,7 +23,6 @@ html, body {
     body::-webkit-scrollbar {
         display: none;
     }
-
 main {
     flex: 1;
     display: flex;
@@ -36,9 +36,10 @@ main {
     padding: 0 !important;
 }
 
+
 .image_slider {
     width: 100%;
-    height: 100vh; 
+    height: 86.4vh;
     overflow: hidden;
     margin: 0 !important;
     position: relative;
@@ -46,16 +47,29 @@ main {
     background-color: #132A13;
     display: flex;
 }
- 
+
 .slide {
     min-width: 100%;
     height: 100%;
     transition: transform 0.5s ease-in-out;
     flex-shrink: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    position: relative; 
 }
+
+
+.slide-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    object-position: center 20%;
+}
+/*
+    .blurred {
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+}*/
+
 
 .slide-text {
     position: absolute;
@@ -65,6 +79,7 @@ main {
     text-align: left;
     color: white;
     max-width: 800px;
+    z-index: 2; /*  img üzerinde görünmesi için */
 }
 
     .slide-text h2 {
@@ -171,6 +186,49 @@ button {
     .circle.active {
         background-color: white;
     }
+/* Slider altı içerik alanı */
+.content-section {
+    padding: 80px 20px 0 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+    .content-intro {
+        max-width: 900px;
+        margin: 0 auto 60px;
+        text-align: center;
+    }
+
+        .content-intro h2 {
+            font-size: 4rem;
+            color: #132A13;
+            margin-bottom: 25px;
+            font-family: Cambria, Georgia, serif;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .content-intro p {
+            font-size: 1.9rem;
+            color: #495057;
+            line-height: 1.8;
+            margin-bottom: 0;
+        }
+
+@media (max-width: 768px) {
+    .content-section {
+        padding: 60px 15px 0 15px;
+    }
+
+    .content-intro h2 {
+        font-size: 3rem;
+    }
+
+    .content-intro p {
+        font-size: 1.7rem;
+    }
+}
 
 /* Responsive Ayarlar */
 @media (max-width: 1400px) {

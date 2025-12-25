@@ -1,0 +1,118 @@
+﻿.page-title {
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 26px;
+    color: #333;
+}
+.card-container {
+   
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.plant-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+}
+
+
+/* RESİM ALANI */
+.image-wrapper {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+}
+
+    .image-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+/* KART İÇERİĞİ */
+.card-body {
+    padding: 15px;
+}
+
+    /* BİTKİ ADI */
+    .card-body h3 {
+        text-align: center;
+        margin: 0 0 12px 0;
+        font-size: 20px;
+        color: #2d3436;
+    }
+
+    /* BİLGİ LİSTESİ */
+    .card-body ul {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 15px 0;
+    }
+
+    .card-body li {
+        padding: 5px 0;
+        color: #555;
+        font-size: 14px;
+    }
+
+        .card-body li strong {
+            color: #333;
+            margin-right: 5px;
+        }
+
+/* BİLGİ BUTONU */
+.info-btn {
+    width: 100%;
+    padding: 10px;
+    background: #2f9e44;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    margin-top: 5px;
+}
+
+    .info-btn:hover {
+        background: #278a3a;
+    }
+
+/* AÇILAN BİLGİ ALANI */
+.card-info {
+    display: none;
+    margin-top: 12px;
+    padding: 12px 0;
+    background: white;
+}
+
+.plant-card.active .card-info {
+    display: block;
+}
+
+.card-info p {
+    margin: 0 0 12px 0;
+    color: #444;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+/* KAYDET BUTONU */
+.save-btn {
+    width: 100%;
+    padding: 9px;
+    background: white;
+    color: #2f9e44;
+    border: 2px solid #2f9e44;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+    .save-btn:hover {
+        background: #2f9e44;
+        color: white;
+    }
