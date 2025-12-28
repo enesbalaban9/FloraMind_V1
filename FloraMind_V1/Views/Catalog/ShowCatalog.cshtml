@@ -31,9 +31,13 @@
                         <div class="card-info">
                             <p></p>
 
-                            <button class="save-btn">
-                                🌱 Bitkilerime Kaydet
-                            </button>
+                             <form asp-controller="UserPlants" asp-action="Add" method="post">
+                        <input type="hidden" name="plantId" value="@item.PlantID" />
+
+                        <button type="submit" class="save-btn">
+                            🌱 Bitkilerime Kaydet
+                        </button>
+                              </form>
                         </div>
                     </div>
                 </div>

@@ -40,7 +40,9 @@
                         }
 
                         <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Hesabim">Hesabım</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Plant" asp-action="Bitkilerim">Bitkilerim</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="UserPlants" asp-action="Index">Bitkilerim</a>
+                        </li>
                         <li class="nav-item"><a class="nav-link" asp-controller="Catalog" asp-action="ShowCatalog">Katalog</a></li>
                     </ul>
                     <div class="d-flex">

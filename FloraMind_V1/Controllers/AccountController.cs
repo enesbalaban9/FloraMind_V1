@@ -6,7 +6,8 @@ using FloraMind_V1.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
-using FloraMind_V1.Helpers; // Statik şifreleme metotları buradan gelir
+using FloraMind_V1.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FloraMind_V1.Controllers
 {
@@ -15,7 +16,6 @@ namespace FloraMind_V1.Controllers
         private readonly FloraMindDbContext _context;
         private readonly IUserService _userService;
 
-        // Tek ve birleşik constructor (DI için)
         public AccountController(FloraMindDbContext context, IUserService userService)
         {
             _context = context;
@@ -50,7 +50,7 @@ namespace FloraMind_V1.Controllers
 
             var user = new User
             {
-                Name = model.UserName,
+                Name = model.UserName, // Register modelinde UserName kullanılıyor, burası doğru
                 Email = model.Email,
                 PasswordHash = passwordHash,
                 RegistrationDate = DateTime.UtcNow,
@@ -61,7 +61,6 @@ namespace FloraMind_V1.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            // Yeni kayıttan sonra otomatik oturum açma
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()),
@@ -95,14 +94,12 @@ namespace FloraMind_V1.Controllers
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == model.Email);
 
-            // Kullanıcı ve Şifre Kontrolü (Statik VerifyPassword kullanıldı)
             if (user == null || !SecurityHelper.VerifyPassword(model.Password, user.PasswordHash))
             {
                 ModelState.AddModelError(string.Empty, "Geçersiz email veya şifre");
                 return View(model);
             }
 
-            // Hesap Askıya Alma Kontrolü
             if (user.IsBanned)
             {
                 ModelState.AddModelError(string.Empty, "Hesabınız yönetici tarafından askıya alınmıştır.");
@@ -111,7 +108,6 @@ namespace FloraMind_V1.Controllers
 
             await _userService.UpdateLastLoginDateAsync(user.UserID);
 
-            // CLAIMS TABANLI OTURUM AÇMA
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()),
@@ -137,9 +133,66 @@ namespace FloraMind_V1.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
-            // Cookie tabanlı oturumu kapatma
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
+        }
+
+        // --- HESABIM KISMI (DÜZELTİLDİ) ---
+
+        [Authorize]
+        public async Task<IActionResult> Hesabim()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null) return RedirectToAction("Login");
+
+            int userId = int.Parse(userIdClaim.Value);
+
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return NotFound();
+
+            var model = new EditProfileViewModel
+            {
+                // DÜZELTME: model.UserName yerine model.Name kullanıldı
+                Name = user.Name,
+                Email = user.Email
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Hesabim(EditProfileViewModel model)
+        {
+            // Password alanı zorunlu olmadığı için ModelState validasyonunu manipüle edebiliriz
+            // Veya modelde Password nullable olduğu için sorun çıkmayacaktır.
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            int userId = int.Parse(userIdClaim.Value);
+
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return RedirectToAction("Login");
+
+            // DÜZELTME: model.UserName yerine model.Name kullanıldı
+            user.Name = model.Name;
+            user.Email = model.Email;
+
+            // Şifre alanı boş değilse güncelle
+            if (!string.IsNullOrEmpty(model.Password))
+            {
+                user.PasswordHash = SecurityHelper.HashPassword(model.Password);
+            }
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            ViewBag.Message = "Bilgileriniz başarıyla güncellendi!";
+            return View(model);
         }
     }
 }
