@@ -2,91 +2,212 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <script type="importmap"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FloraMind</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/_Layout.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/FloraMind_V1.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    @* Sayfalardan gelen özel CSS'leri karşılayan kısım *@
     @await RenderSectionAsync("Styles", required: false)
+
+    <style>
+        :root {
+            --primary-green: #2d5a27;
+            --light-green: #4CAF50;
+            --bg-glass: rgba(255, 255, 255, 0.65);
+        }
+
+        body {
+            background: #f8faf8;
+            overflow-x: hidden;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .navbar .container {
+            max-width: 1320px;
+        }
+
+        .main-header {
+            position: sticky;
+            top: 0;
+            z-index: 1050;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .navbar {
+            background: var(--bg-glass) !important;
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 8px 0 !important;
+            transition: all 0.4s ease;
+        }
+
+        .navbar-brand {
+            display: flex; !important;
+            align-items: center;!important;
+            gap: 12px;
+            perspective: 1000px;
+        }
+
+            .navbar-brand img {
+                height: 64px; !important;
+                transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); !important;
+            }
+
+            .navbar-brand:hover img {
+                transform: rotateY(180deg) scale(1.1);
+            }
+
+        .brand-text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 2.2rem;
+            letter-spacing: -1px;
+            text-transform: uppercase; /* Tamamı büyük harf */
+            background: linear-gradient(to right, #2d5a27, #52b788);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-item {
+            opacity: 0;
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: #333 !important;
+            padding: 8px 15px !important;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+            .nav-link::before {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                width: 0;
+                height: 2px;
+                background: var(--light-green);
+                transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            }
+
+            .nav-link:hover {
+                color: var(--primary-green) !important;
+                transform: translateY(-2px);
+            }
+
+                .nav-link:hover::before {
+                    width: 80%;
+                    left: 10%;
+                }
+
+        .btn-custom {
+            border-radius: 12px;
+            font-weight: 600;
+            padding: 10px 24px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-login {
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+        }
+
+            .btn-login:hover {
+                background: var(--primary-green);
+                color: white;
+                box-shadow: 0 8px 20px rgba(45, 90, 39, 0.2);
+            }
+
+        .btn-register {
+            background: var(--primary-green);
+            color: white;
+            border: none;
+        }
+
+            .btn-register:hover {
+                background: var(--light-green);
+                transform: translateY(-3px);
+                box-shadow: 0 10px 25px rgba(76, 175, 80, 0.3);
+            }
+    </style>
 </head>
 <body>
     <header class="main-header">
-        <nav class="navbar navbar-expand-lg bg-white">
+        <nav class="navbar navbar-expand-lg">
             <div class="container">
-
-
                 <a asp-controller="Home" asp-action="Index" class="navbar-brand">
-                    <span class="brand-text">Flora Mind</span>
-                    <img src="~/images/logo.png" alt="FloraMind Logo" />
+                    <img src="~/images/logo.png" alt="FloraMind" />
+                    <span class="brand-text">FloraMind</span>
                 </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
-                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-
                 <div class="collapse navbar-collapse" id="mainNavbar">
-                    <ul class="navbar-nav ms-auto me-3">
-
+                    <ul class="navbar-nav ms-auto align-items-center">
                         @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Admin" asp-action="Index">Yönetici</a>
-                            </li>
+                            <li class="nav-item" style="animation-delay: 0.1s;"><a class="nav-link" asp-controller="Admin" asp-action="Index">Yönetici</a></li>
                         }
+                        <li class="nav-item" style="animation-delay: 0.2s;"><a class="nav-link" asp-controller="Account" asp-action="Hesabim">Hesabım</a></li>
+                        <li class="nav-item" style="animation-delay: 0.3s;"><a class="nav-link" asp-controller="UserPlants" asp-action="Index">Bitkilerim</a></li>
+                        <li class="nav-item" style="animation-delay: 0.4s;"><a class="nav-link" asp-controller="Catalog" asp-action="ShowCatalog">Katalog</a></li>
 
-                        <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Hesabim">Hesabım</a></li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="UserPlants" asp-action="Index">Bitkilerim</a>
-                        </li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Catalog" asp-action="ShowCatalog">Katalog</a></li>
-                    </ul>
-                    <div class="d-flex">
-
-                        <ul class="navbar-nav ms-auto">
-                           
+                        <li class="ms-lg-4 d-flex gap-2 align-items-center" style="animation-delay: 0.5s;">
                             @if (User.Identity.IsAuthenticated)
                             {
-                                <li class="nav-item">
-                                    
-                                    <span class="nav-link">Hoşgeldin, <strong>@User.Identity.Name</strong>&nbsp;</span>
-                                </li>
-                                <li class="nav-item">
-                                    <form asp-action="Logout" asp-controller="Account" method="post" class="d-inline">
-                                        <button type="submit" class="btn btn-danger btn-sm">Çıkış Yap</button>
-                                    </form>
-                                </li>
+                                <span class="nav-link text-dark">@User.Identity.Name</span>
+                                <form asp-action="Logout" asp-controller="Account" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-danger btn-sm rounded-pill">Çıkış</button>
+                                </form>
                             }
                             else
                             {
-                                <li class="nav-item">
-                                    <a class="btn btn-outline-primary me-2" asp-controller="Account" asp-action="Login">Giriş Yap</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="btn btn-primary" asp-controller="Account" asp-action="Register">Kayıt Ol</a>
-                                </li>
+                                <a class="btn-custom btn-login" asp-controller="Account" asp-action="Login">Giriş</a>
+                                <a class="btn-custom btn-register" asp-controller="Account" asp-action="Register">Kayıt Ol</a>
                             }
-                        </ul>
-                    </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>
     </header>
 
-        <main role="main">
-            @RenderBody()
-        </main>
+    <main role="main">
+        @RenderBody()
+    </main>
 
-    <footer class="site-footer">
+    <footer class="site-footer mt-5 p-4 text-center border-top bg-white">
         © 2025 FloraMind — Tüm Hakları Saklıdır.
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/_Layout.js" asp-append-version="true"></script>
+
+    @* Sayfalardan gelen JS'leri karşılayan kısım (Section Hatasını Çözen Satır) *@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
