@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using FloraMind_V1.Models;
+using FloraMind_V1.Models.Login;
 
 namespace FloraMind_V1.Data
 {
@@ -13,6 +14,7 @@ namespace FloraMind_V1.Data
         public DbSet<Plant> Plants { get; set; }
         public DbSet<Content> Contents { get; set; }
         public DbSet<UserPlant> UserPlants { get; set; }
+        public DbSet<ForgotPassword> ForgottenPasswords { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) // Veritabanı ilişkilerini tanımlama

@@ -6,7 +6,8 @@ using FloraMind_V1.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
-using FloraMind_V1.Helpers; // Statik şifreleme metotları buradan gelir
+using FloraMind_V1.Helpers;
+using FloraMind_V1.Models.Login; // Statik şifreleme metotları buradan gelir
 
 namespace FloraMind_V1.Controllers
 {
@@ -141,5 +142,45 @@ namespace FloraMind_V1.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
+
+
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if(!ModelState.IsValid)
+            { 
+                return View(model); 
+            }
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(user => user.Email == model.Email);
+            if (user != null)
+            {
+                var random = new Random();
+                var VerificationCode = random.Next(100000, 999999).ToString();
+
+                var forgotPasswordEntry = new ForgotPassword
+                {
+                    Email = user.Email,
+                    VerificationCode = VerificationCode,
+                    ExpirationDate = DateTime.UtcNow.AddMinutes(15),
+                    IsUsed = false,
+                    UserID = user.UserID
+                };
+
+                _context.ForgottenPasswords.Add(forgotPasswordEntry);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("VerifyCode", new { email = model.Email });
+            }
+
+            return RedirectToAction("VerifyCode", new { email = model.Email });
+        }
     }
+
 }
