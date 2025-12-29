@@ -41,6 +41,7 @@ namespace FloraMind_V1.Controllers
             var userPlants = await _context.UserPlants
                                            .Where(up => up.UserID == userId)
                                            .Include(up => up.Plant) // Bitki detaylarını (resim, isim) çek
+                                           .ThenInclude(p => p.Contents)
                                            .ToListAsync();
 
             return View(userPlants);

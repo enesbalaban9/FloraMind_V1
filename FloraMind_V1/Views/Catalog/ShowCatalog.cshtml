@@ -14,8 +14,7 @@
                 <div class="plant-card">
                     <div class="image-wrapper">
 
-                        <img src="">
-
+                <img src="~/images/@item.ImageUrl" alt="@item.Name">
                     </div>
                     
                     <div class="card-body">
@@ -29,8 +28,21 @@
                         <button class="info-btn">Bilgi</button>
 
                         <div class="card-info">
-                            <p></p>
+                    @if (item.Contents != null && item.Contents.Any())
+                    {
+                        @foreach (var content in item.Contents)
+                        {
+                            <div class="content-item">
+                                <strong>Bitki İçeriği:</strong>
+                                <p>@content.Body</p>
+                            </div>
 
+                        }
+                    }
+                    else
+                    {
+                        <p class="no-content">Henüz içerik eklenmemiş.</p>
+                    }
                              <form asp-controller="UserPlants" asp-action="Add" method="post">
                         <input type="hidden" name="plantId" value="@item.PlantID" />
 

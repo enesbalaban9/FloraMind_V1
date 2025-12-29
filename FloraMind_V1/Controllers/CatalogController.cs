@@ -19,7 +19,9 @@ namespace FloraMind_V1.Controllers
         }
         public IActionResult ShowCatalog()
         {
-            var plants = _context.Plants.ToList(); 
+            var plants = _context.Plants
+                  .Include(p => p.Contents)  
+                  .ToList();
             return View(plants);
         }
         public async Task <IActionResult> UserProfileDetails(int id)

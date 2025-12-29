@@ -1,15 +1,16 @@
 ﻿.page-title {
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     text-align: center;
     font-size: 26px;
     color: #333;
 }
 
-.card-container {
+.plant-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
+    gap: 20px;
 }
+
 
 .plant-card {
     border: 1px solid #e0e0e0;
@@ -20,28 +21,18 @@
     flex-direction: column;
 }
 
-.image-wrapper {
-    width: 100%;
-    height: auto;
-    min-height: 180px;
-    max-height: 240px;
-    overflow: hidden;
-    background-color: #f8f9fa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-    .image-wrapper img {
+    .plant-card img {
         width: 100%;
         height: auto;
-        max-height: 240px;
+        min-height: 150px;
+        max-height: 250px;
         object-fit: contain;
         display: block;
+        background-color: #f8f9fa;
     }
 
 .card-body {
-    padding: 24px;
+    padding: 15px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -50,77 +41,48 @@
     .card-body h3 {
         text-align: center;
         margin: 0 0 12px 0;
-        font-size: 24px;
+        font-size: 25px;
         color: #2d3436;
     }
 
-    .card-body ul {
-        list-style: none;
-        padding: 0;
-        margin: 0 0 15px 0;
-    }
 
-    .card-body li {
+    .card-body h4 {
         display: flex;
         align-items: center;
         padding: 5px 0;
+        margin: 0 0 15px 0;
+        font-size: 20px;
         color: #555;
-        font-size: 16px;
+        font-weight: normal;
     }
 
-        .card-body li strong {
+        .card-body h4 strong {
             color: #333;
             margin-right: 10px;
             min-width: 50px;
             flex-shrink: 0;
         }
 
-.info-btn {
-    width: 100%;
-    padding: 10px;
-    background: #2f9e44;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 15px;
-    margin-top: auto;
-}
 
-    .info-btn:hover {
-        background: #278a3a;
-    }
-
-.card-info {
-    display: none;
-    margin-top: 12px;
-    padding: 12px 0;
-}
-
-.plant-card.active .card-info {
-    display: block;
-}
 .content-item {
     display: flex;
     align-items: flex-start;
-    margin-top: 12px;
+    margin-bottom: 10px;
 }
 
     .content-item strong {
-        min-width: 100px; 
-        margin-right: 12px;
-        font-size: 15px;
+        min-width: 100px;
+        margin-right: 10px;
         color: #333;
         flex-shrink: 0;
     }
 
     .content-item p {
-        font-size: 16px;
-        color: #444;
-        line-height: 1.6;
         margin: 0;
+        color: #444;
+        font-size: 16px;
+        line-height: 1.5;
     }
-
 
 
 .no-content {
@@ -128,22 +90,22 @@
     font-style: italic;
     text-align: center;
     margin: 8px 0;
-    font-size: 16px;
+    font-size: 15px;
 }
 
-.save-btn {
+.btn-danger {
     width: 100%;
     padding: 9px;
     background: white;
-    color: #2f9e44;
-    border: 2px solid #2f9e44;
+    color: #dc3545;
+    border: 2px solid #dc3545;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
-    margin-top: 10px;
+    margin-top: auto;
 }
 
-    .save-btn:hover {
-        background: #2f9e44;
+    .btn-danger:hover {
+        background: #dc3545;
         color: white;
     }
