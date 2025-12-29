@@ -1,0 +1,43 @@
+﻿@model IEnumerable<FloraMind_V1.Models.Plant>
+
+@{
+    ViewData["Title"] = "Bitkilerim";
+}
+
+<div class="container mt-5">
+    <h2>Benim Bahçem</h2>
+    <hr />
+
+    <div class="row">
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info">
+                Henüz bahçenize eklediğiniz bir bitki yok. <a asp-action="Index">Kataloga Git</a>
+            </div>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "/images/default-plant.jpg" : item.ImageUrl)" class="card-img-top" alt="@item.Name" style="height: 200px; object-fit: cover;">
+
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+                            <p class="card-text text-muted">@item.Species</p>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a asp-action="Details" asp-route-id="@item.PlantID" class="btn btn-sm btn-outline-primary">Detay</a>
+                                    <a asp-action="Delete" asp-route-id="@item.PlantID" class="btn btn-sm btn-outline-danger">Sil</a>
+                                </div>
+                                <small class="text-muted">Eklenme: @item.DateAdded.ToString("dd.MM.yyyy")</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

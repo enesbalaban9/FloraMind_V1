@@ -17,7 +17,11 @@ namespace FloraMind_V1.Controllers
         {
             return View();
         }
-
+        public IActionResult ShowCatalog()
+        {
+            var plants = _context.Plants.ToList(); 
+            return View(plants);
+        }
         public async Task <IActionResult> UserProfileDetails(int id)
         {
 

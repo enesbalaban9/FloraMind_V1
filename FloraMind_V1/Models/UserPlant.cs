@@ -9,7 +9,7 @@ namespace FloraMind_V1.Models
         [Key]
         public int UserPlantID { get; set; } // Kullanıcı-Bitki İlişki ID'si
 
-        public DateTime DateAdopted { get; set; } // Bitkinin Sahiplenilme Tarihi
+        public DateTime DateAdopted { get; set; } = DateTime.Now; // Bitkinin Sahiplenilme Tarihi
 
         public DateTime LastWatered { get; set; } // Bitkinin Son Sulanma Tarihi
 

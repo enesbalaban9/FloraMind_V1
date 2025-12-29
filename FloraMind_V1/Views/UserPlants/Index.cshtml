@@ -1,0 +1,44 @@
+﻿@model IEnumerable<FloraMind_V1.Models.UserPlant>
+
+@{
+    ViewData["Title"] = "Bitkilerim";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="flora-container" style="padding: 20px;">
+    <h2 class="page-title" style="text-align:center; margin-bottom:30px;">Koleksiyonum</h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success" style="text-align:center;">@TempData["Message"]</div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div style="text-align: center; margin-top: 50px;">
+            <h3>Henüz bitki eklemediniz.</h3>
+            <a asp-controller="Catalog" asp-action="ShowCatalog" class="btn btn-primary">Kataloğa Git</a>
+        </div>
+    }
+    else
+    {
+        <div class="plant-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+            @foreach (var item in Model)
+            {
+                <div class="plant-card" style="border:1px solid #ddd; padding:10px; border-radius:8px;">
+                    <img src="@(item.Plant?.ImageUrl ?? "https://via.placeholder.com/150")"
+                         alt="Bitki" style="width:100%; height:200px; object-fit:cover;">
+
+                    <div class="card-body" style="text-align:center; margin-top:10px;">
+                        <h3>@(item.Plant?.Name ?? "İsimsiz")</h3>
+
+                        <form asp-controller="UserPlants" asp-action="Remove" method="post" style="margin-top:10px;" onsubmit="return confirm('Silmek istediğine emin misin?');">
+                            <input type="hidden" name="userPlantId" value="@item.UserPlantID" />
+                            <button type="submit" class="btn btn-danger" style="width:100%">Sil</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

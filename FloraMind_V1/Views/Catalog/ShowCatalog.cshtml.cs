@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace FloraMind_V1.Views.Plant
+namespace FloraMind_V1.Views.Catalog
 {
-    public class CicekliModel : PageModel
+    public class ShowCatalogModel : PageModel
     {
         public void OnGet()
         {
