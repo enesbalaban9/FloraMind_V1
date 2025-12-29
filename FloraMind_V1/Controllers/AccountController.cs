@@ -149,6 +149,86 @@ namespace FloraMind_V1.Controllers
             return View();
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> Hesabim()
+        {
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            if (userIdClaim == null) return RedirectToAction("Login");
+
+            int currentUserId = int.Parse(userIdClaim.Value);
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserID == currentUserId);
+            if (user == null) return NotFound();
+
+            int plantCount = await _context.UserPlants.CountAsync(up => up.UserID == currentUserId);
+            var model = new EditProfileViewModel
+            {
+                Name = user.Name,
+                Email = user.Email,
+                Role = user.Role ?? "Üye",
+                RegistrationDate = user.RegistrationDate,
+                PlantCount = plantCount,
+                LastUpdateDate = user.LastLoginDate
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Hesabim(EditProfileViewModel model)
+        {
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            if (userIdClaim == null) return RedirectToAction("Login");
+
+            int currentUserId = int.Parse(userIdClaim.Value);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserID == currentUserId);
+
+            if (user == null) return NotFound();
+
+            if (!string.IsNullOrEmpty(model.NewPassword))
+            {
+                if (model.NewPassword != model.ConfirmNewPassword)
+                {
+                    TempData["ErrorMessage"] = "Yeni şifreler birbiriyle eşleşmiyor.";
+                    return RedirectToAction("Hesabim");
+                }
+                user.PasswordHash = model.NewPassword;
+            }
+
+            user.Name = model.Name;
+            user.Email = model.Email;
+            user.LastLoginDate = DateTime.Now;
+
+            try
+            {
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+
+                var claims = new List<System.Security.Claims.Claim>
+        {
+            new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.NameIdentifier, user.UserID.ToString()),
+            new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name, user.Name),
+            new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, user.Role ?? "User")
+        };
+
+                var claimsIdentity = new System.Security.Claims.ClaimsIdentity(claims, Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme);
+                await HttpContext.SignInAsync(Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme, new System.Security.Claims.ClaimsPrincipal(claimsIdentity));
+
+                TempData["SuccessMessage"] = "Profiliniz başarıyla güncellendi.";
+            }
+            catch (System.Exception ex)
+            {
+                TempData["ErrorMessage"] = "Hata: " + ex.Message;
+            }
+
+            return RedirectToAction("Hesabim");
+        }
+
+
+
+
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
