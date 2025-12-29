@@ -4,18 +4,15 @@ namespace FloraMind_V1.Models
 {
     public class EditProfileViewModel
     {
-        // Not: [Authorize] etiketi burada kullanılmaz, sildik.
-
-        [Required(ErrorMessage = "Ad alanı zorunludur!")]
-        [MaxLength(50, ErrorMessage = "Ad alanı en fazla 50 karakter olabilir !")]
-        public string Name { get; set; } // Senin doshandaki isimle uyumlu: Name
-
-        [Required(ErrorMessage = "Email alanı zorunludur !")]
-        [MaxLength(50, ErrorMessage = "Email alanı en fazla 50 karakter olabilir !")]
-        [EmailAddress(ErrorMessage = "Geçerli bir email adresi giriniz.")]
+        public string Name { get; set; }
         public string Email { get; set; }
+        public string Role { get; set; }
+        public DateTime RegistrationDate { get; set; }
+        public DateTime? LastUpdateDate { get; set; } // Yeni bilgi alanı
+        public int PlantCount { get; set; }
 
-        // Controller tarafında şifre değiştirme kontrolü için bu alan şart:
-        public string? Password { get; set; }
+        public string? OldPassword { get; set; }
+        public string? NewPassword { get; set; }
+        public string? ConfirmNewPassword { get; set; } // Şifre tekrarı
     }
 }

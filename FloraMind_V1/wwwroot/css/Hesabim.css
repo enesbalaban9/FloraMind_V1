@@ -1,38 +1,230 @@
-﻿.account-container {
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 30px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+﻿/* 1. ANA DEĞİŞKENLER VE GENEL YAPI */
+:root {
+    --primary-green: #27ae60;
+    --bg-light: #f4f7f6;
+    --text-dark: #2c3e50;
+    --muted: #7f8c8d;
+    --white: #ffffff;
+    --shadow: 0 10px 25px rgba(0,0,0,0.05);
 }
 
-    .account-container h2 {
-        text-align: center;
-        color: #2e7d32; 
-        margin-bottom: 30px;
-        font-weight: 600;
-    }
+body {
+    background-color: var(--bg-light) !important;
+}
 
-.info-group {
+.profile-layout {
+    display: flex;
+    gap: 30px;
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    align-items: flex-start;
+}
+
+/* 2. SOL SIDEBAR (STATİK BİLGİLER) */
+.profile-sidebar {
+    flex: 1;
+    max-width: 300px;
+}
+
+.sidebar-card {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    background: var(--primary-green);
+    color: white;
+    font-size: 2.2rem;
+    line-height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    font-weight: bold;
+}
+
+.user-role-badge {
+    background: #e8f5e9;
+    color: var(--primary-green);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.user-stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 25px 0;
+    padding: 15px 0;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* 3. SAĞ İÇERİK (GÖRÜNTÜLEME VE FORM) */
+.profile-main-content {
+    flex: 2;
+}
+
+.settings-card {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+}
+
+/* GÖRÜNTÜLEME MODU ÖZELLİKLERİ (Senin gönderdiğin ekler) */
+.card-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.info-grid {
+    padding: 10px 0;
+}
+
+.info-row {
+    display: flex;
+    padding: 15px 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.info-label {
+    flex: 0 0 150px;
+    font-weight: 600;
+    color: #6c757d;
+}
+
+.info-value {
+    color: #212529;
+    font-size: 1rem;
+}
+
+/* FORM DÜZENİ VE GÜVENLİK KUTUSU */
+.form-section h5 {
+    color: var(--text-dark);
+    border-left: 4px solid var(--primary-green);
+    padding-left: 12px;
+    margin-bottom: 25px;
+}
+
+.input-group {
     display: flex;
     align-items: center;
-    margin-bottom: 18px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 20px;
 }
 
-    .info-group label {
-        width: 140px;
-        font-weight: 600;
+    .input-group label {
+        flex: 0 0 150px;
+        font-weight: 500;
         color: #555;
-        text-align: right;
-        padding-right: 15px;
     }
 
-    .info-group input {
+    .input-group input {
         flex: 1;
-        padding: 10px 12px;
-        border-radius: 6px;
-        font-size: 14px;
+        max-width: 450px;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
     }
+
+.security-box {
+    background: #fff9f0;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 20px;
+    border: 1px dashed #ffd9a3;
+}
+
+/* BUTONLAR */
+.btn-primary {
+    background: var(--primary-green);
+    color: white;
+    border: none;
+    padding: 12px 35px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-outline-primary {
+    background: transparent;
+    border: 1px solid var(--primary-green);
+    color: var(--primary-green);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+    .btn-outline-primary:hover {
+        background: var(--primary-green);
+        color: white;
+    }
+
+.btn-secondary {
+    background: #e9ecef;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* MOBİL UYUMLULUK */
+@media (max-width: 768px) {
+    .profile-layout {
+        flex-direction: column;
+    }
+
+    .input-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+        .input-group label {
+            flex: none;
+            margin-bottom: 8px;
+        }
+}
+
+/* Bildirim Kutuları */
+.alert-box {
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideDown 0.4s ease-out;
+}
+
+    .alert-box.success {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+        border: 1px solid #c8e6c9;
+    }
+
+    .alert-box.error {
+        background-color: #ffebee;
+        color: #c62828;
+        border: 1px solid #ffcdd2;
+    }
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -4,6 +4,7 @@ using FloraMind_V1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FloraMind_V1.Migrations
 {
     [DbContext(typeof(FloraMindDbContext))]
-    partial class FloraMindDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251229112900_FloraMind_V1.1")]
+    partial class FloraMind_V11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
