@@ -4,6 +4,7 @@ using FloraMind_V1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FloraMind_V1.Migrations
 {
     [DbContext(typeof(FloraMindDbContext))]
-    partial class FloraMindDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251230215204_inttodouble")]
+    partial class inttodouble
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,34 +89,6 @@ namespace FloraMind_V1.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("ForgottenPasswords");
-                });
-
-            modelBuilder.Entity("FloraMind_V1.Models.Notification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("FloraMind_V1.Models.Plant", b =>
@@ -262,17 +237,6 @@ namespace FloraMind_V1.Migrations
                 });
 
             modelBuilder.Entity("FloraMind_V1.Models.Login.ForgotPassword", b =>
-                {
-                    b.HasOne("FloraMind_V1.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("FloraMind_V1.Models.Notification", b =>
                 {
                     b.HasOne("FloraMind_V1.Models.User", "User")
                         .WithMany()

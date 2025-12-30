@@ -19,7 +19,7 @@ namespace FloraMind_V1.Models
 
         public DateTime DateAdded { get; set; } = DateTime.UtcNow; // Bitkinin Eklenme tarihi (Otomatik)
 
-        public int DefaultWateringIntervalHours { get; set; } // Sulama Aralığı (Saat Cinsinden)
+        public double DefaultWateringIntervalHours { get; set; } // Sulama Aralığı (Saat Cinsinden)
 
 
 

@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/_Layout.css" asp-append-version="true" />
 
-    @* Sayfalardan gelen özel CSS'leri karşılayan kısım *@
     @await RenderSectionAsync("Styles", required: false)
 
     <style>
@@ -59,15 +58,15 @@
         }
 
         .navbar-brand {
-            display: flex; !important;
-            align-items: center;!important;
+            display: flex !important;
+            align-items: center !important;
             gap: 12px;
             perspective: 1000px;
         }
 
             .navbar-brand img {
-                height: 64px; !important;
-                transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); !important;
+                height: 64px !important;
+                transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
             }
 
             .navbar-brand:hover img {
@@ -79,7 +78,7 @@
             font-weight: 800;
             font-size: 2.2rem;
             letter-spacing: -1px;
-            text-transform: uppercase; /* Tamamı büyük harf */
+            text-transform: uppercase;
             background: linear-gradient(to right, #2d5a27, #52b788);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -109,15 +108,17 @@
                 transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             }
 
-            .nav-link:hover {
+            .nav-link:hover::before,
+            .nav-link.active::before {
+                width: 80%;
+                left: 10%;
+            }
+
+            .nav-link:hover,
+            .nav-link.active {
                 color: var(--primary-green) !important;
                 transform: translateY(-2px);
             }
-
-                .nav-link:hover::before {
-                    width: 80%;
-                    left: 10%;
-                }
 
         .btn-custom {
             border-radius: 12px;
@@ -169,13 +170,26 @@
                     <ul class="navbar-nav ms-auto align-items-center">
                         @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                         {
-                            <li class="nav-item" style="animation-delay: 0.1s;"><a class="nav-link" asp-controller="Admin" asp-action="Index">Yönetici</a></li>
+                            <li class="nav-item" style="animation-delay: 0.1s;">
+                                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admin" ? "active" : "")" asp-controller="Admin" asp-action="Index">Yönetici</a>
+                            </li>
                         }
-                        <li class="nav-item" style="animation-delay: 0.2s;"><a class="nav-link" asp-controller="Account" asp-action="Hesabim">Hesabım</a></li>
-                        <li class="nav-item" style="animation-delay: 0.3s;"><a class="nav-link" asp-controller="UserPlants" asp-action="Index">Bitkilerim</a></li>
-                        <li class="nav-item" style="animation-delay: 0.4s;"><a class="nav-link" asp-controller="Catalog" asp-action="ShowCatalog">Katalog</a></li>
+                        <li class="nav-item" style="animation-delay: 0.2s;">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Hesabim" ? "active" : "")" asp-controller="Account" asp-action="Hesabim">Hesabım</a>
+                        </li>
+                        <li class="nav-item" style="animation-delay: 0.3s;">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "UserPlants" ? "active" : "")" asp-controller="UserPlants" asp-action="Index">Bitkilerim</a>
+                        </li>
+                        <li class="nav-item" style="animation-delay: 0.4s;">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Catalog" ? "active" : "")" asp-controller="Catalog" asp-action="ShowCatalog">Katalog</a>
+                        </li>
+                        <li class="nav-item" style="animation-delay: 0.5s;">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Notifications" ? "active" : "")" asp-controller="Notifications" asp-action="Index">
+                                <i class="fas fa-bell"></i> Bildirimler
+                            </a>
+                        </li>
 
-                        <li class="ms-lg-4 d-flex gap-2 align-items-center" style="animation-delay: 0.5s;">
+                        <li class="ms-lg-4 d-flex gap-2 align-items-center" style="animation-delay: 0.6s;">
                             @if (User.Identity.IsAuthenticated)
                             {
                                 <span class="nav-link text-dark">@User.Identity.Name</span>
@@ -206,8 +220,6 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
-    @* Sayfalardan gelen JS'leri karşılayan kısım (Section Hatasını Çözen Satır) *@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

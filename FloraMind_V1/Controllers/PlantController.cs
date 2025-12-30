@@ -50,44 +50,57 @@ namespace FloraMind_V1.Controllers
         }
 
         // POST: Plant/Create
-        
-        [ValidateAntiForgeryToken]
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Species,DefaultWateringIntervalHours")] Plant plant, IFormFile? imageFile)
         {
+            ModelState.Remove("User");
+            ModelState.Remove("UserPlants");
+            ModelState.Remove("Contents");
+
             if (ModelState.IsValid)
             {
-                if (imageFile != null && imageFile.Length > 0)
+                try
                 {
-                    // Klasör yolunu daha güvenli oluşturuyoruz
-                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
-
-                    if (!Directory.Exists(directoryPath))
+                    if (imageFile != null && imageFile.Length > 0)
                     {
-                        Directory.CreateDirectory(directoryPath);
+                        var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+
+                        if (!Directory.Exists(directoryPath))
+                        {
+                            Directory.CreateDirectory(directoryPath);
+                        }
+
+                        var extension = Path.GetExtension(imageFile.FileName);
+                        var imageName = Guid.NewGuid().ToString() + extension;
+                        var location = Path.Combine(directoryPath, imageName);
+
+                        using (var stream = new FileStream(location, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(stream);
+                        }
+
+                        plant.ImageUrl = imageName;
                     }
 
-                    var extension = Path.GetExtension(imageFile.FileName);
-                    var imageName = Guid.NewGuid().ToString() + extension;
-                    var location = Path.Combine(directoryPath, imageName);
+                    plant.DateAdded = DateTime.Now;
+                    plant.UserID = null;
+                    plant.User = null;
+                    plant.UserPlants = null;
 
-                    using (var stream = new FileStream(location, FileMode.Create))
-                    {
-                        await imageFile.CopyToAsync(stream);
-                    }
-
-                    plant.ImageUrl = imageName;
+                    _context.Add(plant);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-
-                plant.DateAdded = DateTime.UtcNow;
-                plant.UserID = null;
-
-                _context.Add(plant);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Hata: " + ex.Message);
+                }
             }
             return View(plant);
         }
+        
 
         // GET: Plant/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -125,40 +138,50 @@ namespace FloraMind_V1.Controllers
         }
 
         // GET: Plant/Delete/5
+        // 1. ADIM: Onay Sayfasını Görüntüleyen Metot (GET)
+        // URL: /Plant/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
 
             var plant = await _context.Plants
-                .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.PlantID == id);
 
             if (plant == null) return NotFound();
 
-            return View(plant);
+            return View(plant); // Senin attığın HTML kodunu içeren sayfayı açar
         }
 
-        // POST: Plant/Delete/5
+        // 2. ADIM: Butona Basınca Silen Metot (POST)
+        // URL: /Plant/Delete/5 (Form içinden tetiklenir)
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var plant = await _context.Plants.FindAsync(id);
+            var plant = await _context.Plants
+                .Include(p => p.UserPlants)
+                .FirstOrDefaultAsync(m => m.PlantID == id);
+
             if (plant != null)
             {
+                // Manuel Cascade işlemi
+                if (plant.UserPlants != null && plant.UserPlants.Any())
+                {
+                    _context.UserPlants.RemoveRange(plant.UserPlants);
+                }
+
                 _context.Plants.Remove(plant);
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
         }
 
-        // Hata listesindeki CS0103 hatasının sebebi bu metodun eksik ya da yanlış yerde olmasıydı:
         private bool PlantExists(int id)
         {
             return _context.Plants.Any(e => e.PlantID == id);
         }
 
-        // --- ÖZEL METOTLAR ---
 
         // 1. Bitkilerim'e Ekle
         [HttpPost]

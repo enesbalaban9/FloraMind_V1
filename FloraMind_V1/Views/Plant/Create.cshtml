@@ -38,7 +38,7 @@
                     <div class="form-group mb-4">
                         <label asp-for="DefaultWateringIntervalHours" class="form-label">Varsayılan Sulama Aralığı (Saat)</label>
                         <div class="input-group">
-                            <input asp-for="DefaultWateringIntervalHours" class="form-control" type="number" min="1" placeholder="Örn: 168" />
+                            <input asp-for="DefaultWateringIntervalHours" class="form-control" type="number" min="0.01" step="0.01" placeholder="Örn: 168" />
                             <span class="input-group-text text-muted"><i class="fas fa-clock"></i></span>
                         </div>
                         <span asp-validation-for="DefaultWateringIntervalHours" class="text-danger"></span>

@@ -31,10 +31,6 @@
                 <td>@Html.DisplayFor(modelItem => item.Species)</td>
                 <td>@item.DateAdded.ToShortDateString()</td>
                 <td>
-                    <a asp-action="AddToMyPlants" asp-route-id="@item.PlantID" class="btn btn-sm btn-success">
-                        + Ekle
-                    </a> |
-
                     <a asp-action="Edit" asp-route-id="@item.PlantID" class="btn btn-sm btn-info">Düzenle</a> |
                     <a asp-action="Details" asp-route-id="@item.PlantID" class="btn btn-sm btn-secondary">Detaylar</a> |
                     <a asp-action="Delete" asp-route-id="@item.PlantID" class="btn btn-sm btn-danger">Sil</a>

@@ -4,15 +4,27 @@
     ViewData["Title"] = "Benim Bahçem";
 }
 
-<div class="container mt-5">
-    <h2>Benim Bahçem</h2>
-    <hr />
+<div class="container mt-5 mb-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-dark display-6">
+            <i class="fas fa-seedling text-success me-2"></i>Bitkilerim
+        </h2>
+        <p class="text-muted"> Bitkilerinin durumunu buradan takip edebilirsin.</p>
+    </div>
+    <hr class="mb-5 opacity-25" />
 
     <div class="row">
         @if (!Model.Any())
         {
-            <div class="alert alert-info">
-                Henüz bahçenize eklediğiniz bir bitki yok. <a asp-action="ShowCatalog">Kataloga Git</a>
+            <div class="col-12 text-center py-5">
+                <div class="alert bg-white shadow-sm border-0 py-5" style="border-radius: 20px;">
+                    <i class="fas fa-search fa-3x mb-3 text-muted opacity-50"></i>
+                    <h4 class="text-dark">Bahçen şu an boş görünüyor.</h4>
+                    <p class="text-muted mb-4">Bitki eklemek için lütfen kataloğu ziyaret et.</p>
+                    <a asp-controller="Plant" asp-action="Index" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm">
+                        <i class="fas fa-book-open me-2"></i>Kataloğa Göz At
+                    </a>
+                </div>
             </div>
         }
         else
@@ -20,31 +32,51 @@
             @foreach (var item in Model)
             {
                 <div class="col-md-4 mb-4">
-                    <div class="card h-100 shadow">
-                        <img src="@(string.IsNullOrEmpty(item.Plant.ImageUrl) ? "/images/default-plant.jpg" : $"/images/{item.Plant.ImageUrl}")"
-                             class="card-img-top" alt="@item.Plant.Name" style="height: 200px; object-fit: cover;">
+                    <div class="card h-100 border-0 shadow-lg" style="border-radius: 20px; transition: transform 0.3s;">
 
-                        <div class="card-body text-center">
-                            <h5 class="card-title">@item.Plant.Name</h5>
-                            <p class="card-text text-muted small">@item.Plant.Species</p>
+                        <div class="position-relative">
+                            <img src="@(string.IsNullOrEmpty(item.Plant.ImageUrl) ? "/images/default-plant.jpg" : $"/images/{item.Plant.ImageUrl}")"
+                                 class="card-img-top" alt="@item.Plant.Name" style="height: 220px; object-fit: cover; border-radius: 20px 20px 0 0;">
 
-                            <div class="p-2 mb-3 bg-light rounded border">
-                                <p class="mb-1 small fw-bold text-uppercase">Sıradaki Sulama</p>
-                                <h4 class="countdown text-primary"
-                                    data-target="@item.NextWateringDate?.ToString("yyyy-MM-ddTHH:mm:ss")">
+                            <button class="btn btn-light btn-sm position-absolute top-0 end-0 m-3 shadow-sm rounded-circle"
+                                    onclick="toggleNicknameForm(@item.UserPlantID)" title="İsim Değiştir">
+                                <i class="fas fa-pen text-primary"></i>
+                            </button>
+                        </div>
+
+                        <div class="card-body text-center p-4">
+                            <h4 class="card-title fw-bold mb-1">
+                                @(string.IsNullOrEmpty(item.Nickname) ? item.Plant.Name : item.Nickname)
+                            </h4>
+                            <p class="text-muted small mb-3">@(string.IsNullOrEmpty(item.Nickname) ? item.Plant.Species : $"({item.Plant.Name})")</p>
+
+                            <div id="nicknameForm-@item.UserPlantID" class="mb-3 d-none animate__animated animate__fadeIn">
+                                <form asp-action="UpdateNickname" method="post" class="input-group input-group-sm">
+                                    <input type="hidden" name="id" value="@item.UserPlantID" />
+                                    <input type="text" name="newNickname" class="form-control shadow-none" placeholder="Yeni isim..." value="@item.Nickname" />
+                                    <button type="submit" class="btn btn-success"><i class="fas fa-check"></i></button>
+                                </form>
+                            </div>
+
+                            <div class="p-3 mb-3 bg-light rounded-4 border-0">
+                                <p class="mb-1 small fw-bold text-uppercase text-muted">Sıradaki Sulama</p>
+                                <h4 class="countdown text-primary fw-bold mb-0"
+                                    data-target="@item.NextWateringDate?.ToString("yyyy/MM/dd HH:mm:ss")">
                                     --:--:--
                                 </h4>
                             </div>
 
                             <form asp-action="WaterPlant" asp-route-id="@item.UserPlantID" method="post">
-                                <button type="submit" class="btn btn-success w-100 mb-2">
-                                    <i class="fas fa-tint"></i> Şimdi Suladım
+                                <button type="submit" class="btn btn-success btn-lg w-100 mb-3 shadow-sm" style="border-radius: 15px;">
+                                    <i class="fas fa-tint me-2"></i> Şimdi Suladım
                                 </button>
                             </form>
 
-                            <div class="d-flex justify-content-between mt-3">
-                                <a asp-action="Details" asp-route-id="@item.UserPlantID" class="btn btn-sm btn-link">Detay</a>
-                                <small class="text-muted">Son Sulama: @item.LastWatered.ToString("dd.MM HH:mm")</small>
+                            <div class="d-flex justify-content-between align-items-center mt-2 border-top pt-3">
+                                <a asp-action="Details" asp-route-id="@item.UserPlantID" class="btn btn-sm btn-link text-decoration-none p-0">Detaylar</a>
+                                <small class="text-muted">
+                                    <i class="far fa-clock me-1"></i> @item.LastWatered.ToString("dd.MM HH:mm")
+                                </small>
                             </div>
                         </div>
                     </div>
@@ -54,6 +86,20 @@
     </div>
 </div>
 
+@* Dosyanın en sonundaki tüm parantezlerin kapandığından emin olduktan sonra bunu ekle *@
+
 @section Scripts {
     <script src="~/js/Countdown.js"></script>
+    <script>
+        function toggleNicknameForm(id) {
+            const form = document.getElementById('nicknameForm-' + id);
+            if (form) {
+                if (form.classList.contains('d-none')) {
+                    form.classList.remove('d-none');
+                } else {
+                    form.classList.add('d-none');
+                }
+            }
+        }
+    </script>
 }

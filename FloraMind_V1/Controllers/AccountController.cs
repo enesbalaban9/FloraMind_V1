@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using FloraMind_V1.Helpers;
-using FloraMind_V1.Models.Login; // Statik şifreleme metotları buradan gelir
+using FloraMind_V1.Models.Login;
+using FloraMind_V1.Helpers;
 
 namespace FloraMind_V1.Controllers
 {
@@ -15,12 +16,15 @@ namespace FloraMind_V1.Controllers
     {
         private readonly FloraMindDbContext _context;
         private readonly IUserService _userService;
+        private readonly IEmailService _emailService; // Constructor'a ekle
 
         // Tek ve birleşik constructor (DI için)
-        public AccountController(FloraMindDbContext context, IUserService userService)
+        public AccountController(FloraMindDbContext context, IUserService userService, IEmailService EmailService)
         {
             _context = context;
             _userService = userService;
+            _emailService = EmailService;
+
         }
 
         public IActionResult Index()
@@ -144,11 +148,6 @@ namespace FloraMind_V1.Controllers
         }
 
 
-        public IActionResult ForgotPassword()
-        {
-            return View();
-        }
-
 
         [HttpGet]
         public async Task<IActionResult> Hesabim()
@@ -226,7 +225,10 @@ namespace FloraMind_V1.Controllers
             return RedirectToAction("Hesabim");
         }
 
-
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
 
 
         [HttpPost]
@@ -256,10 +258,75 @@ namespace FloraMind_V1.Controllers
                 _context.ForgottenPasswords.Add(forgotPasswordEntry);
                 await _context.SaveChangesAsync();
 
+                string mesaj = $"<h3>Şifre Sıfırlama Kodu</h3><p>Kodunuz: <b>{VerificationCode}</b></p>";
+                await _emailService.SendEmailAsync(user.Email, "FloraMind Şifre Sıfırlama", mesaj);
+
                 return RedirectToAction("VerifyCode", new { email = model.Email });
             }
 
             return RedirectToAction("VerifyCode", new { email = model.Email });
+        }
+
+        [HttpGet]
+        public IActionResult VerifyCode(string email)
+        {
+            ViewBag.Email = email;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> VerifyCode(VerifyCodeViewModel model)
+        {
+            var entry = await _context.ForgottenPasswords
+                .FirstOrDefaultAsync(x => x.Email == model.Email &&
+                                          x.VerificationCode == model.Code &&
+                                          !x.IsUsed &&
+                                          x.ExpirationDate > DateTime.UtcNow);
+
+            if (entry != null)
+            {
+                return RedirectToAction("ResetPassword", new { email = model.Email });
+            }
+
+            ModelState.AddModelError("", "Geçersiz veya süresi dolmuş kod.");
+            ViewBag.Email = model.Email;
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string email)
+        {
+            ViewBag.Email = email;
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (model.NewPassword != model.ConfirmPassword)
+            {
+                ModelState.AddModelError("", "Şifreler uyuşmuyor.");
+                ViewBag.Email = model.Email;
+                return View(model);
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+            if (user != null)
+            {
+                user.PasswordHash = FloraMind_V1.Helpers.SecurityHelper.HashPassword(model.NewPassword);
+
+                var codeEntry = await _context.ForgottenPasswords
+                    .FirstOrDefaultAsync(x => x.Email == model.Email && !x.IsUsed);
+
+                if (codeEntry != null)
+                {
+                    codeEntry.IsUsed = true;
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Login", "Account");
+            }
+
+            return View(model);
         }
     }
 

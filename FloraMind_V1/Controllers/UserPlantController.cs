@@ -104,11 +104,10 @@ namespace FloraMind_V1.Controllers
             // 1. Son sulama zamanını şu an olarak ayarla
             userPlant.LastWatered = DateTime.Now;
 
-            // 2. Bir sonraki sulama tarihini hesapla
-            // Eğer UserPlant'e özel bir aralık yoksa, katalogdaki (Plant) varsayılan aralığı kullan.
-            int aralik = userPlant.WateringIntervalHours > 0
-                         ? userPlant.WateringIntervalHours
-                         : (userPlant.Plant != null ? userPlant.Plant.DefaultWateringIntervalHours : 24);
+            
+            double aralik = userPlant.WateringIntervalHours > 0
+                          ? userPlant.WateringIntervalHours
+                          : (userPlant.Plant != null ? (double)userPlant.Plant.DefaultWateringIntervalHours : 24.0);
 
             userPlant.NextWateringDate = DateTime.Now.AddHours(aralik);
 
@@ -144,6 +143,18 @@ namespace FloraMind_V1.Controllers
 
             // İşlem bitince sayfayı yenile (Index'e git)
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateNickname(int id, string newNickname)
+        {
+            var userPlant = await _context.UserPlants.FindAsync(id);
+            if (userPlant == null) return NotFound();
+
+            userPlant.Nickname = newNickname;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index)); // Bitkilerim listesine geri dön
         }
     }
 }

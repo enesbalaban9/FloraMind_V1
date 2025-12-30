@@ -9,15 +9,20 @@ namespace FloraMind_V1.Models
         [Key]
         public int UserPlantID { get; set; } // Kullanıcı-Bitki İlişki ID'si
 
+        [Display(Name = "Bitki Takma Adı")]
+        public string? Nickname { get; set; }
+
         public DateTime DateAdopted { get; set; } = DateTime.Now; // Bitkinin Sahiplenilme Tarihi
 
         public DateTime LastWatered { get; set; } // Bitkinin Son Sulanma Tarihi
 
-        public int WateringIntervalHours { get; set; } // Sulama Aralığı (Saat Cinsinden)
+        public double WateringIntervalHours { get; set; } // Sulama Aralığı (Saat Cinsinden)
 
         public DateTime? NextWateringDate { get;set; } // Bir sonraki sulama tarihi
 
         public bool? IsEmailSent { get; set; } // Sulama Hatırlatma E-postası Gönderildi mi?
+
+
 
         //Foreign Keys
 

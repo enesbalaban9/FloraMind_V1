@@ -41,17 +41,18 @@
                 <i class="fas fa-lock"></i>
                 <input type="password" name="Password" placeholder="Password">
             </div>
-            <span class="text-danger">@Html.ValidationMessageFor(m => m.Password)</span>
 
             <div class="button-group">
                 <button type="submit" class="btn-register btn-primary">Giriş Yap</button>
 
                 <a href="@Url.Action("Register", "Account")" id="goToRegister" class="btn-register btn-secondary">Kayıt Ol</a>
+                <a href="@Url.Action("ForgotPassword", "Account")" id="goToForgotPassword" class="btn-register btn-secondary">Şifremi Unuttum</a>
             </div>
 
             <div class="home-button">
                 <a href="@Url.Action("Index", "Home")" id="goToLayout" class="btn-register btn-primary">Giriş Sayfasına Dön</a>
             </div>
+
         </form>
     </div>
 
