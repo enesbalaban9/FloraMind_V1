@@ -3,148 +3,164 @@
     text-align: center;
     font-size: 26px;
     color: #333;
+    font-weight: bold;
 }
 
 .card-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 30px;
+    padding: 20px;
+    justify-items: center;
+    align-items: start; 
 }
 
 .plant-card {
     border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    overflow: hidden;
+    border-radius: 14px;
     background: #fff;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    max-width: 400px; 
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    transition: box-shadow 0.3s ease;
 }
 
 .image-wrapper {
-    aspect-ratio: 4/3;
     width: 100%;
-    height: auto;
-    min-height: 180px;
-    max-height: 240px;
+    height: 240px;
     overflow: hidden;
     background-color: #f8f9fa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
     .image-wrapper img {
         width: 100%;
-        height: auto;
-        max-height: 240px;
+        height: 100%;
         object-fit: cover;
-        display: block;
     }
 
 .card-body {
-    padding: 24px;
-    flex-grow: 1;
+    display: flex;
+    padding: 0;
+    min-height: 110px;
+}
+
+.card-main-info {
+    flex: 1;
+    padding: 20px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    text-align: center; 
+    align-items: center;
 }
 
-    .card-body h3 {
-        text-align: center;
-        margin: 0 0 12px 0;
-        font-size: 24px;
-        color: #2d3436;
+    .card-main-info h3 {
+        margin: 0 0 6px 0;
+        font-size: 22px;
+        color: #00897b;
+        font-weight: bold;
     }
 
-    .card-body ul {
+    .card-main-info ul {
         list-style: none;
         padding: 0;
-        margin: 0 0 15px 0;
+        margin: 0;
     }
 
-    .card-body li {
-        display: flex;
-        align-items: center;
-        padding: 5px 0;
-        color: #555;
-        font-size: 16px;
+    .card-main-info li {
+        font-size: 15px;
+        color: #666;
     }
 
-        .card-body li strong {
-            color: #333;
-            margin-right: 10px;
-            min-width: 50px;
-            flex-shrink: 0;
-        }
 
 .info-btn {
-    width: 100%;
-    padding: 10px;
-    background: #2f9e44;
-    color: white;
+    width: 65px;
+    background-color: #f9f9f9;
     border: none;
-    border-radius: 6px;
+    border-left: 1px solid #eee;
+    color: #999;
     cursor: pointer;
-    font-size: 15px;
-    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-family: "Georgia", serif;
+    transition: all 0.2s ease;
 }
 
-    .info-btn:hover {
-        background: #278a3a;
+    .info-btn:hover,
+    .plant-card.active .info-btn {
+        background-color: #f0f0f0;
+        color: #00897b;
+        box-shadow: inset 3px 0 6px rgba(0,0,0,0.03);
     }
 
+@keyframes slideDown {
+    0% {
+        max-height: 0;
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    100% {
+        max-height: 200px;
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .card-info {
-    display: none;
-    margin-top: 12px;
-    padding: 12px 0;
+    display: none; 
+    overflow: hidden;
+    background-color: #fff;
+    border-top: 1px solid #f0f0f0;
 }
 
 .plant-card.active .card-info {
     display: block;
+    animation: slideDown 0.4s ease-out forwards;
 }
-.content-item {
+
+.card-info-content {
+    padding: 20px;
+}
+
+.card-buttons {
     display: flex;
-    align-items: flex-start;
-    margin-top: 12px;
+    gap: 12px;
 }
 
-    .content-item strong {
-        min-width: 100px; 
-        margin-right: 12px;
-        font-size: 15px;
-        color: #333;
-        flex-shrink: 0;
-    }
-
-    .content-item p {
-        font-size: 16px;
-        color: #444;
-        line-height: 1.6;
-        margin: 0;
-    }
-
-
-
-.no-content {
-    color: #999;
-    font-style: italic;
-    text-align: center;
-    margin: 8px 0;
-    font-size: 16px;
+.info-btn2 {
+    flex: 1;
+    padding: 12px;
+    background: #00897b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 13px;
+    text-transform: uppercase;
 }
 
 .save-btn {
-    width: 100%;
-    padding: 9px;
+    flex: 1;
+    padding: 12px;
     background: white;
-    color: #2f9e44;
-    border: 2px solid #2f9e44;
-    border-radius: 6px;
+    color: #00897b;
+    border: 2px solid #00897b;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 14px;
-    margin-top: 10px;
+    font-weight: bold;
+    font-size: 13px;
+    text-transform: uppercase;
 }
 
     .save-btn:hover {
-        background: #2f9e44;
+        background: #00897b;
         color: white;
     }

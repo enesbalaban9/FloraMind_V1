@@ -4,58 +4,44 @@
 }
 
 <link rel="stylesheet" href="~/css/ShowCatalog.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
 <h2 class="page-title">Bitki Kataloğu</h2>
 
 <div class="card-container">
-	
-            @foreach (var item in Model)
-            {
-                <div class="plant-card">
-                    <div class="image-wrapper">
-
+    @foreach (var item in Model)
+    {
+        <div class="plant-card">
+            <div class="image-wrapper">
                 <img src="~/images/@item.ImageUrl" alt="@item.Name">
-                    </div>
-                    
-                    <div class="card-body">
-                        <h3>@item.Name</h3>
-
-                        <ul>
-                            <li><strong>Tür:</strong> @item.Species</li>
-              
-                        </ul>
-
-                        <button class="info-btn">Bilgi</button>
-
-                        <div class="card-info">
-                    @if (item.Contents != null && item.Contents.Any())
-                    {
-                        @foreach (var content in item.Contents)
-                        {
-                            <div class="content-item">
-                                <strong>Bitki İçeriği:</strong>
-                                <p>@content.Body</p>
-                            </div>
-
-                        }
-                    }
-                    else
-                    {
-                        <p class="no-content">Henüz içerik eklenmemiş.</p>
-                    }
-                             <form asp-controller="UserPlants" asp-action="Add" method="post">
-                        <input type="hidden" name="plantId" value="@item.PlantID" />
-
-                        <button type="submit" class="save-btn">
-                            🌱 Bitkilerime Kaydet
-                        </button>
-                              </form>
-                        </div>
-                    </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="card-main-info">
+                    <h3>@item.Name</h3>
+                    <ul>
+                        <li><strong>Tür:</strong> @item.Species</li>
+                    </ul>
                 </div>
-            }
 
+                <button class="info-btn" type="button">
+                    <i class="fas fa-info"></i>
+                </button>
+            </div>
 
+            <div class="card-info">
+                <div class="card-info-content">
+                    <form asp-controller="UserPlants" asp-action="Add" method="post">
+                        <input type="hidden" name="plantId" value="@item.PlantID" />
+                        <div class="card-buttons">
+                            <button type="button" class="info-btn2">BİLGİ</button>
+                            <button type="submit" class="save-btn">BİTKİLERİME KAYDET</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
 <script>
