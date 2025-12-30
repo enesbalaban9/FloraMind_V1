@@ -41,9 +41,14 @@
                                     <i class="fas fa-tint"></i> Şimdi Suladım
                                 </button>
                             </form>
-
+                                         
                             <div class="d-flex justify-content-between mt-3">
-                                <a asp-action="Details" asp-route-id="@item.UserPlantID" class="btn btn-sm btn-link">Detay</a>
+                                <a asp-controller="Catalog"
+                                   asp-action="Details"
+                                   asp-route-id="@item.PlantID"
+                                   class="btn btn-sm btn-link">
+                                    Detay
+                                </a>
                                 <small class="text-muted">Son Sulama: @item.LastWatered.ToString("dd.MM HH:mm")</small>
                             </div>
                         </div>

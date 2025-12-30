@@ -33,8 +33,16 @@
                 <div class="card-info-content">
                     <form asp-controller="UserPlants" asp-action="Add" method="post">
                         <input type="hidden" name="plantId" value="@item.PlantID" />
+
                         <div class="card-buttons">
-                            <button type="button" class="info-btn2">BİLGİ</button>
+                            <a asp-controller="Catalog"
+                               asp-action="Details"
+                               asp-route-id="@item.PlantID"
+                               class="info-btn2"
+                               style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                                BİLGİ
+                            </a>
+
                             <button type="submit" class="save-btn">BİTKİLERİME KAYDET</button>
                         </div>
                     </form>
