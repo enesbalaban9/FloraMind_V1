@@ -1,63 +1,59 @@
 ﻿@model IEnumerable<FloraMind_V1.Models.UserPlant>
 
 @{
-    ViewData["Title"] = "Bitkilerim";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Benim Bahçem";
 }
-<link rel="stylesheet" href="~/css/UserPlants-Index.css" />
-<div class="flora-container">
-    <h2 class="page-title">Koleksiyonum</h2>
 
-    @if (TempData["Message"] != null)
-    {
-        <div class="alert alert-success">@TempData["Message"]</div>
-    }
+<div class="container mt-5">
+    <h2>Benim Bahçem</h2>
+    <hr />
 
-    @if (!Model.Any())
-    {
-        <div style="text-align: center; margin-top: 50px;">
-            <h3>Henüz bitki eklemediniz.</h3>
-            <a asp-controller="Catalog" asp-action="ShowCatalog" class="btn btn-primary">Kataloğa Git</a>
-        </div>
-    }
-    else
-    {
-        <div class="plant-grid">
+    <div class="row">
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info">
+                Henüz bahçenize eklediğiniz bir bitki yok. <a asp-action="ShowCatalog">Kataloga Git</a>
+            </div>
+        }
+        else
+        {
             @foreach (var item in Model)
             {
-                <div class="plant-card">
-                    <img src="@(string.IsNullOrEmpty(item.Plant?.ImageUrl) ? "https://via.placeholder.com/150" : $"/images/{item.Plant.ImageUrl}")"
-                         alt="Bitki">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow">
+                        <img src="@(string.IsNullOrEmpty(item.Plant.ImageUrl) ? "/images/default-plant.jpg" : $"/images/{item.Plant.ImageUrl}")"
+                             class="card-img-top" alt="@item.Plant.Name" style="height: 200px; object-fit: cover;">
 
-                    <div class="card-body">
-                        <h3>@(item.Plant?.Name ?? "İsimsiz")</h3>
-                        <h4><strong>Tür:</strong>@(item.Plant?.Species ?? "Bilinmiyor")</h4>
-                        @if (item.Plant?.Contents != null && item.Plant.Contents.Any())
-                        {
-                            <div>
-                                @foreach (var content in item.Plant.Contents)
-                                {
-                                    <div class="content-item">
-                                        <strong>Bitki İçeriği:</strong>
-                                        <p>@content.Body</p>
-                                    </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">@item.Plant.Name</h5>
+                            <p class="card-text text-muted small">@item.Plant.Species</p>
 
-                                }
+                            <div class="p-2 mb-3 bg-light rounded border">
+                                <p class="mb-1 small fw-bold text-uppercase">Sıradaki Sulama</p>
+                                <h4 class="countdown text-primary"
+                                    data-target="@item.NextWateringDate?.ToString("yyyy-MM-ddTHH:mm:ss")">
+                                    --:--:--
+                                </h4>
                             </div>
-                        }
-                        else
-                        {
-                            <p>
-                                Henüz içerik eklenmemiş.
-                            </p>
-                        }
-                        <form asp-controller="UserPlants" asp-action="Remove" method="post" style="margin-top:10px;" onsubmit="return confirm('Silmek istediğine emin misin?');">
-                            <input type="hidden" name="userPlantId" value="@item.UserPlantID" />
-                            <button type="submit" class="btn btn-danger" style="width:100%">Koleksiyondan Kaldır</button>
-                        </form>
+
+                            <form asp-action="WaterPlant" asp-route-id="@item.UserPlantID" method="post">
+                                <button type="submit" class="btn btn-success w-100 mb-2">
+                                    <i class="fas fa-tint"></i> Şimdi Suladım
+                                </button>
+                            </form>
+
+                            <div class="d-flex justify-content-between mt-3">
+                                <a asp-action="Details" asp-route-id="@item.UserPlantID" class="btn btn-sm btn-link">Detay</a>
+                                <small class="text-muted">Son Sulama: @item.LastWatered.ToString("dd.MM HH:mm")</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             }
-        </div>
-    }
+        }
+    </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/Countdown.js"></script>
+}

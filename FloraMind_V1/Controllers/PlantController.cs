@@ -50,24 +50,26 @@ namespace FloraMind_V1.Controllers
         }
 
         // POST: Plant/Create
-        [HttpPost]
+        
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Species")] Plant plant, IFormFile? imageFile)
+        [HttpPost]
+        public async Task<IActionResult> Create([Bind("Name,Species,DefaultWateringIntervalHours")] Plant plant, IFormFile? imageFile)
         {
             if (ModelState.IsValid)
             {
-                // Resim Yükleme İşlemi
-                if (imageFile != null)
+                if (imageFile != null && imageFile.Length > 0)
                 {
-                    var extension = Path.GetExtension(imageFile.FileName);
-                    var imageName = Guid.NewGuid() + extension;
-                    var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/", imageName);
+                    // Klasör yolunu daha güvenli oluşturuyoruz
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
 
-                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/");
                     if (!Directory.Exists(directoryPath))
                     {
                         Directory.CreateDirectory(directoryPath);
                     }
+
+                    var extension = Path.GetExtension(imageFile.FileName);
+                    var imageName = Guid.NewGuid().ToString() + extension;
+                    var location = Path.Combine(directoryPath, imageName);
 
                     using (var stream = new FileStream(location, FileMode.Create))
                     {
@@ -78,7 +80,7 @@ namespace FloraMind_V1.Controllers
                 }
 
                 plant.DateAdded = DateTime.UtcNow;
-                plant.UserID = null; // Login sistemi gelene kadar null
+                plant.UserID = null;
 
                 _context.Add(plant);
                 await _context.SaveChangesAsync();
@@ -159,33 +161,62 @@ namespace FloraMind_V1.Controllers
         // --- ÖZEL METOTLAR ---
 
         // 1. Bitkilerim'e Ekle
+        [HttpPost]
         public async Task<IActionResult> AddToMyPlants(int id)
         {
             var originalPlant = await _context.Plants.FindAsync(id);
             if (originalPlant == null) return NotFound();
 
-            Plant newUserPlant = new Plant
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Name == User.Identity.Name);
+            if (user == null) return RedirectToAction("Login", "Account");
+
+            UserPlant newUserPlant = new UserPlant
             {
-                Name = originalPlant.Name,
-                Species = originalPlant.Species,
-                ImageUrl = originalPlant.ImageUrl,
-                DateAdded = DateTime.UtcNow,
-                UserID = null
+                PlantID = originalPlant.PlantID,
+                UserID = user.UserID,
+                WateringIntervalHours = originalPlant.DefaultWateringIntervalHours,
+                DateAdopted = DateTime.Now
             };
 
-            _context.Add(newUserPlant);
+            newUserPlant.PerformWatering();
+
+            _context.UserPlants.Add(newUserPlant);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(MyPlants));
         }
 
-        // 2. Bitkilerim Sayfası
         public async Task<IActionResult> MyPlants()
         {
-            var myPlants = _context.Plants
-                .Where(p => p.UserID == null);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Name == User.Identity.Name);
+            if (user == null) return RedirectToAction("Login", "Account");
 
-            return View(await myPlants.ToListAsync());
+            var myPlants = await _context.UserPlants
+                .Include(up => up.Plant)
+                .Where(up => up.UserID == user.UserID)
+                .ToListAsync();
+
+            return View(myPlants);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> WaterPlant(int id)
+        {
+            // Veritabanından kullanıcının bitkisini bul
+            var userPlant = await _context.UserPlants.FindAsync(id);
+
+            if (userPlant == null) return NotFound();
+
+            // Modelde yazdığımız PerformWatering metodunu çağırarak 
+            // LastWatered ve NextWateringDate alanlarını güncelliyoruz.
+            userPlant.PerformWatering();
+
+            _context.Update(userPlant);
+            await _context.SaveChangesAsync();
+
+            // İşlem bitince tekrar liste sayfasına dön
+            return RedirectToAction(nameof(MyPlants));
         }
     }
 }

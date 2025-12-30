@@ -19,19 +19,17 @@ namespace FloraMind_V1.Models
 
         public DateTime DateAdded { get; set; } = DateTime.UtcNow; // Bitkinin Eklenme tarihi (Otomatik)
 
-        // --- YENİ EKLENEN KISIMLAR (FOTOĞRAF İÇİN) ---
+        public int DefaultWateringIntervalHours { get; set; } // Sulama Aralığı (Saat Cinsinden)
 
-        // 1. Veritabanına resmin dosya yolu kaydedilecek (Örn: \images\plants\resim.jpg)
+
+
         [ValidateNever]
         public string? ImageUrl { get; set; }
 
-        // 2. Formdan gelen dosya burada tutulacak. 
-        // [NotMapped] veritabanında bu isimde bir kolon oluşturulmasını engeller.
         [NotMapped]
         [ValidateNever]
         public IFormFile? ImageUpload { get; set; }
 
-        // ----------------------------------------------
 
         // İlişkiler
         [ValidateNever]

@@ -86,24 +86,37 @@ namespace FloraMind_V1.Controllers
         // --- SULAMA İŞLEMİ ---
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Water(int userPlantId)
+        public async Task<IActionResult> WaterPlant(int id) // İsim View ile uyumlu hale getirildi (id)
         {
             var userId = GetLoggedInUserId();
 
+            // Bitkiyi ve ilişkili Katalog bilgilerini (Plant) birlikte çekiyoruz 
+            // ki sulama aralığını (DefaultWateringIntervalHours) görebilelim.
             var userPlant = await _context.UserPlants
-                .FirstOrDefaultAsync(up => up.UserPlantID == userPlantId && up.UserID == userId);
+                .Include(up => up.Plant)
+                .FirstOrDefaultAsync(up => up.UserPlantID == id && up.UserID == userId);
 
             if (userPlant == null)
             {
                 return NotFound("Sulama işlemi için uygun bir bitki kaydı bulunamadı.");
             }
 
-            // LastWatered alanını güncelle
-            userPlant.LastWatered = DateTime.UtcNow;
+            // 1. Son sulama zamanını şu an olarak ayarla
+            userPlant.LastWatered = DateTime.Now;
 
+            // 2. Bir sonraki sulama tarihini hesapla
+            // Eğer UserPlant'e özel bir aralık yoksa, katalogdaki (Plant) varsayılan aralığı kullan.
+            int aralik = userPlant.WateringIntervalHours > 0
+                         ? userPlant.WateringIntervalHours
+                         : (userPlant.Plant != null ? userPlant.Plant.DefaultWateringIntervalHours : 24);
+
+            userPlant.NextWateringDate = DateTime.Now.AddHours(aralik);
+
+            // 3. Değişiklikleri kaydet
+            _context.Update(userPlant);
             await _context.SaveChangesAsync();
 
-            TempData["Message"] = "Bitkiniz başarıyla sulandı!";
+            TempData["Message"] = "Bitkiniz sulandı, geri sayım yeniden başlatıldı!";
             return RedirectToAction(nameof(Index));
         }
 

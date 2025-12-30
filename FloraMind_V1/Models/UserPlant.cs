@@ -13,6 +13,12 @@ namespace FloraMind_V1.Models
 
         public DateTime LastWatered { get; set; } // Bitkinin Son Sulanma Tarihi
 
+        public int WateringIntervalHours { get; set; } // Sulama Aralığı (Saat Cinsinden)
+
+        public DateTime? NextWateringDate { get;set; } // Bir sonraki sulama tarihi
+
+        public bool? IsEmailSent { get; set; } // Sulama Hatırlatma E-postası Gönderildi mi?
+
         //Foreign Keys
 
 
@@ -27,6 +33,16 @@ namespace FloraMind_V1.Models
 
         [ValidateNever]
         public Plant Plant { get; set; }
+
+
+        public void PerformWatering()
+        {
+            LastWatered = DateTime.Now;
+            NextWateringDate = LastWatered.AddHours(WateringIntervalHours);
+            IsEmailSent = false; // Sulama yapıldıktan sonra e-posta gönderim durumu sıfırlanır
+
+
+        }
 
 
 
