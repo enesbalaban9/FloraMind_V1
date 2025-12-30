@@ -69,7 +69,7 @@ namespace FloraMind_V1.Controllers
             }
 
             var newUserPlant = new UserPlant
-            {
+            {   
                 UserID = userId,
                 PlantID = plantId,
                 DateAdopted = DateTime.UtcNow,
