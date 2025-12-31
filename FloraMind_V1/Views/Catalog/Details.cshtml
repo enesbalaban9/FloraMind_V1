@@ -1,12 +1,12 @@
 ﻿@using Microsoft.EntityFrameworkCore
 @model FloraMind_V1.Models.Plant
-@* 1. ADIM: Veritabanını sayfaya dahil ediyoruz *@
+
 @inject FloraMind_V1.Data.FloraMindDbContext _context
 
 @{
     ViewData["Title"] = Model.Name;
 
-    // 2. ADIM: Sayfa yüklenirken bu bitkinin ID'sine ait Content'i buluyoruz
+    // Sayfa yüklenirken bu bitkinin ID'sine ait Content'i buluyoruz
     var bitkiIcerigi = _context.Contents.FirstOrDefault(c => c.PlantID == Model.PlantID);
 }
 

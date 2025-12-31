@@ -18,11 +18,9 @@ public class EmailService : IEmailService
 
         using (var client = new SmtpClient())
         {
-            // Gmail için: "smtp.gmail.com", 587, false
-            // Outlook için: "smtp.office365.com", 587, false
+            
             await client.ConnectAsync("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
 
-            // DİKKAT: Buradaki şifre Gmail şifreniz değil, "Uygulama Şifresi" olmalıdır.
             await client.AuthenticateAsync("floramind.help@gmail.com", "biwszztlichamgqm");
 
             await client.SendAsync(emailMessage);

@@ -1,6 +1,7 @@
 ﻿using FloraMind_V1.Models;
 using Microsoft.EntityFrameworkCore;
 using FloraMind_V1.Services;
+using FloraMind_V1.Data;
 
 namespace FloraMind_V1.Services
 {
@@ -21,72 +22,73 @@ namespace FloraMind_V1.Services
                 {
                     using (var scope = _serviceProvider.CreateScope())
                     {
-                        var _context = scope.ServiceProvider.GetRequiredService<FloraMind_V1.Data.FloraMindDbContext>();
+                        var _context = scope.ServiceProvider.GetRequiredService<FloraMindDbContext>();
                         var _emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
 
-                        var now = DateTime.Now;
+                        // Tolerans payı: 1 dakika ekleyerek kontrol ediyoruz
+                        var now = DateTime.Now.AddMinutes(1);
 
                         var overduePlants = await _context.UserPlants
                             .Include(up => up.Plant)
                             .Include(up => up.User)
-                            .Where(up => up.NextWateringDate <= now && up.IsEmailSent == false)
+                            .Where(up => (up.IsEmailSent == false || up.IsEmailSent == null) && up.NextWateringDate <= now)
                             .ToListAsync();
 
                         foreach (var userPlant in overduePlants)
                         {
-                            if (userPlant.User != null)
+                            if (userPlant.User != null && userPlant.Plant != null)
                             {
-                                string plantName = userPlant.Nickname ?? userPlant.Plant.Name;
+                                // ÖNCELİK NICKNAME: Eğer takma ad varsa onu kullan, yoksa katalog adını kullan
+                                string plantDisplayName = !string.IsNullOrEmpty(userPlant.Nickname)
+                                                          ? userPlant.Nickname
+                                                          : userPlant.Plant.Name;
 
-                                // 1. ADIM: E-POSTA GÖNDERİMİ
-                                if (!string.IsNullOrEmpty(userPlant.User.Email))
+                                // --- Mail İçeriği Düzenleme ---
+                                string subject = $"{plantDisplayName} Susadı! 🌱";
+                                string body = $@"Merhaba {userPlant.User.Name},
+
+'{plantDisplayName}' isimli bitkinizin sulama vakti geldi! 💧
+
+Bitkinizin sağlığı için lütfen en kısa sürede bakımını yapmayı unutmayın.
+
+İyi günler dileriz,
+FloraMind Ekibi";
+
+                                try
                                 {
-                                    string subject = "Bitkinizin Su Zamanı Geldi! 🌱";
-                                    string body = $@"
-                                        <h3>Merhaba {userPlant.User.Name},</h3>
-                                        <p><b>{plantName}</b> isimli bitkinin sulama zamanı geldi.</p>
-                                        <p>Onu susuz bırakmamak için en kısa sürede sulamayı unutma!</p>
-                                        <br>
-                                        <p>FloraMind Ekibi</p>";
-
-                                    try
-                                    {
-                                        await _emailService.SendEmailAsync(userPlant.User.Email, subject, body);
-                                    }
-                                    catch (Exception emailEx)
-                                    {
-                                        System.Diagnostics.Debug.WriteLine("Mail Hatası: " + emailEx.Message);
-                                    }
+                                    await _emailService.SendEmailAsync(userPlant.User.Email, subject, body);
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine("Mail Gönderim Hatası: " + ex.Message);
                                 }
 
-                                // 2. ADIM: SİTE İÇİ BİLDİRİM OLUŞTURMA
+                                // --- Site İçi Bildirim Kaydı ---
                                 var newNotification = new Notification
                                 {
                                     UserID = userPlant.UserID,
-                                    Message = $"🌱 {plantName} isimli bitkinizin sulama zamanı geldi!",
+                                    Message = $"🌱 {plantDisplayName} isimli bitkinizin sulama zamanı geldi!",
                                     CreatedAt = DateTime.Now,
                                     IsRead = false
                                 };
                                 _context.Notifications.Add(newNotification);
 
-                                // Mail ve Bildirim işlemleri bittiği için bayrağı işaretle
+                                // Gönderildi olarak işaretle (Sulama yapılınca Controller'da tekrar false yapılacak)
                                 userPlant.IsEmailSent = true;
                             }
                         }
 
-                        if (overduePlants.Any())
-                        {
-                            await _context.SaveChangesAsync();
-                        }
+                        // Veritabanı değişikliklerini kaydet
+                        await _context.SaveChangesAsync();
                     }
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine("Bildirim Servisi Genel Hatası: " + ex.Message);
+                    System.Diagnostics.Debug.WriteLine("Servis Hatası: " + ex.Message);
                 }
 
-                // Sunum için 5 saniyede bir kontrol eder
-                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+                // 10 saniyede bir kontrol et
+                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
             }
         }
     }

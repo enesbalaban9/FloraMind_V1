@@ -58,7 +58,7 @@
                 </div>
                 <div class="info-row">
                     <span class="info-label">Son Güncelleme:</span>
-                    @* Veritabanından gelen LastLoginDate veya varsa LastUpdateDate bilgisini basıyoruz *@
+
                     <span class="info-value">@(Model.LastUpdateDate?.ToString("dd.MM.yyyy HH:mm") ?? "Henüz güncellenmedi")</span>
                 </div>
             </div>

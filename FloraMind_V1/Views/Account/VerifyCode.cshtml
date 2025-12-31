@@ -24,7 +24,7 @@
 
         <form asp-action="VerifyCode" asp-controller="Account" method="post">
             @Html.AntiForgeryToken()
-            @* Email bilgisini gizli olarak taşıyoruz ki hangi kullanıcının kodunu onayladığımızı bilelim *@
+            
             <input type="hidden" name="Email" value="@ViewBag.Email" />
 
             <div class="text-danger">@Html.ValidationSummary(true)</div>

@@ -1,4 +1,5 @@
-﻿using FloraMind_V1.Data;
+﻿using System.Security.Claims;
+using FloraMind_V1.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,13 +16,15 @@ namespace FloraMind_V1.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // Sadece giriş yapmış kullanıcının bildirimlerini getir
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Name == User.Identity.Name);
+            // Giriş yapan kullanıcının ID'sini en güvenli yoldan (Claim) alıyoruz
+            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (user == null) return RedirectToAction("Login", "Account");
+            if (string.IsNullOrEmpty(userIdStr)) return RedirectToAction("Login", "Account");
+
+            int userId = int.Parse(userIdStr);
 
             var notifications = await _context.Notifications
-                .Where(n => n.UserID == user.UserID)
+                .Where(n => n.UserID == userId)
                 .OrderByDescending(n => n.CreatedAt)
                 .ToListAsync();
 

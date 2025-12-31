@@ -14,9 +14,25 @@ namespace FloraMind_V1.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(string searchName, string searchSpecies)
         {
-            return View();
+            var plantsQuery = _context.Plants.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchName))
+            {
+                plantsQuery = plantsQuery.Where(p => p.Name.Contains(searchName));
+            }
+
+            if (!string.IsNullOrEmpty(searchSpecies))
+            {
+                plantsQuery = plantsQuery.Where(p => p.Species.Contains(searchSpecies));
+            }
+
+            var filteredList = await plantsQuery.ToListAsync();
+
+            // Hata buradaydı: View adını açıkça "ShowCatalog" olarak belirtiyoruz
+            return View("ShowCatalog", filteredList);
         }
 
         public IActionResult ShowCatalog()
@@ -27,7 +43,7 @@ namespace FloraMind_V1.Controllers
             return View(plants);
         }
 
-                                                                                  // ---  BAŞLANGIÇ ---      
+                                                                             
         public IActionResult Details(int id)
         {
             
@@ -39,8 +55,7 @@ namespace FloraMind_V1.Controllers
             }           
             return View(plant);
         }
-                                                                 /// KATALOG VE BİTKİLEİRM KISMINDAKİ BİTKİ BAĞLANTISI 
-
+                                                               
         public async Task<IActionResult> UserProfileDetails(int id)
         {
             var UserDetails = await _context.Users
@@ -56,21 +71,21 @@ namespace FloraMind_V1.Controllers
         [HttpPost]
         public async Task<IActionResult> AddToMyPlants(int id)
         {
-            // 1. Katalogdan bitkiyi bul
+            // Katalogdan bitkiyi bul
             var catalogPlant = await _context.Plants.FindAsync(id);
             if (catalogPlant == null)
             {
                 return NotFound();
             }
 
-            // 2. Mevcut kullanıcının ID'sini al
+            //  Mevcut kullanıcının ID'sini al
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Name == User.Identity.Name);
             if (user == null)
             {
                 return RedirectToAction("Login", "Account");
             }
 
-            // 3. UserPlant nesnesini oluştur
+            //  UserPlant nesnesini oluştur
             var newUserPlant = new UserPlant
             {
                 PlantID = catalogPlant.PlantID,
@@ -79,10 +94,10 @@ namespace FloraMind_V1.Controllers
                 DateAdopted = DateTime.Now
             };
 
-            // 4. Sulama hesaplamasını yap
+            // Sulama hesaplamasını yap
             newUserPlant.PerformWatering();
 
-            // 5. Veritabanına ekle
+            // Veritabanına ekle
             _context.UserPlants.Add(newUserPlant);
             await _context.SaveChangesAsync();
 

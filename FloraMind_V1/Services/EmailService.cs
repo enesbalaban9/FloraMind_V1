@@ -10,7 +10,7 @@ namespace FloraMind_V1.Services
             try
             {
                 var emailMessage = new MimeMessage();
-                // Buradaki "FloraMind" ismi maillerde gönderici adı olarak görünür
+
                 emailMessage.From.Add(new MailboxAddress("FloraMind", "floramind.help@gmail.com"));
                 emailMessage.To.Add(new MailboxAddress("", email));
                 emailMessage.Subject = subject;
@@ -20,7 +20,6 @@ namespace FloraMind_V1.Services
                 {
                     await client.ConnectAsync("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
 
-                    // Buraya aldığın 16 haneli kodu boşluksuz yapıştır
                     await client.AuthenticateAsync("floramind.help@gmail.com", "biwszztlichamgqm");
 
                     await client.SendAsync(emailMessage);

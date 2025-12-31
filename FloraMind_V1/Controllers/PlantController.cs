@@ -137,9 +137,7 @@ namespace FloraMind_V1.Controllers
             return View(plant);
         }
 
-        // GET: Plant/Delete/5
-        // 1. ADIM: Onay Sayfasını Görüntüleyen Metot (GET)
-        // URL: /Plant/Delete/5
+        
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -150,11 +148,10 @@ namespace FloraMind_V1.Controllers
 
             if (plant == null) return NotFound();
 
-            return View(plant); // Senin attığın HTML kodunu içeren sayfayı açar
+            return View(plant); 
         }
 
-        // 2. ADIM: Butona Basınca Silen Metot (POST)
-        // URL: /Plant/Delete/5 (Form içinden tetiklenir)
+        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -183,7 +180,7 @@ namespace FloraMind_V1.Controllers
         }
 
 
-        // 1. Bitkilerim'e Ekle
+        // Bitkilerim'e Ekle
         [HttpPost]
         public async Task<IActionResult> AddToMyPlants(int id)
         {
@@ -231,7 +228,6 @@ namespace FloraMind_V1.Controllers
 
             if (userPlant == null) return NotFound();
 
-            // Modelde yazdığımız PerformWatering metodunu çağırarak 
             // LastWatered ve NextWateringDate alanlarını güncelliyoruz.
             userPlant.PerformWatering();
 

@@ -13,7 +13,8 @@
             }
         }
 
-            public static bool VerifyPassword(string enteredPassword, string storedHashPassword)
+        // Şifre Doğrulama Metodu
+        public static bool VerifyPassword(string enteredPassword, string storedHashPassword)
         {
             if (string.IsNullOrEmpty(enteredPassword) || string.IsNullOrEmpty(storedHashPassword))
             {

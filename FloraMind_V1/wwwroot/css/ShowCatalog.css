@@ -164,3 +164,84 @@
         background: #00897b;
         color: white;
     }
+
+.filter-container {
+    max-width: 1200px;
+    margin: 0 auto 30px auto;
+    padding: 0 20px;
+}
+
+.search-form {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.search-group {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.search-input {
+    position: relative;
+    flex: 1;
+}
+
+    .search-input input {
+        width: 100%;
+        padding: 12px 15px 12px 40px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        outline: none;
+        transition: all 0.3s;
+    }
+
+        .search-input input:focus {
+            border-color: #27ae60;
+            box-shadow: 0 0 5px rgba(39, 174, 96, 0.2);
+        }
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #27ae60;
+}
+
+.filter-btn {
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    white-space: nowrap;
+}
+
+    .filter-btn:hover {
+        background: #219150;
+    }
+
+.no-results {
+    text-align: center;
+    grid-column: 1 / -1;
+    font-size: 1.2rem;
+    color: #666;
+    margin-top: 50px;
+}
+
+/* Mobilde alt alta gelmesi için */
+@media (max-width: 768px) {
+    .search-group {
+        flex-direction: column;
+    }
+
+    .filter-btn {
+        width: 100%;
+    }
+}

@@ -20,7 +20,7 @@ namespace FloraMind_V1.Models
 
         public DateTime? NextWateringDate { get;set; } // Bir sonraki sulama tarihi
 
-        public bool? IsEmailSent { get; set; } // Sulama Hatırlatma E-postası Gönderildi mi?
+        public bool IsEmailSent { get; set; } = false; // Sulama Hatırlatma E-postası Gönderildi mi?
 
 
 
@@ -43,10 +43,11 @@ namespace FloraMind_V1.Models
         public void PerformWatering()
         {
             LastWatered = DateTime.Now;
+            // Bir sonraki sulama tarihini hesapla
             NextWateringDate = LastWatered.AddHours(WateringIntervalHours);
-            IsEmailSent = false; // Sulama yapıldıktan sonra e-posta gönderim durumu sıfırlanır
 
-
+            // KRİTİK SATIR: Bir sonraki sulama zamanı geldiğinde tekrar mail atabilmesi için
+            IsEmailSent = false;
         }
 
 

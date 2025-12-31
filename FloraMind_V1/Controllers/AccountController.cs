@@ -100,7 +100,7 @@ namespace FloraMind_V1.Controllers
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == model.Email);
 
-            // Kullanıcı ve Şifre Kontrolü (Statik VerifyPassword kullanıldı)
+            // Kullanıcı ve Şifre Kontrolü 
             if (user == null || !SecurityHelper.VerifyPassword(model.Password, user.PasswordHash))
             {
                 ModelState.AddModelError(string.Empty, "Geçersiz email veya şifre");
@@ -116,7 +116,7 @@ namespace FloraMind_V1.Controllers
 
             await _userService.UpdateLastLoginDateAsync(user.UserID);
 
-            // CLAIMS TABANLI OTURUM AÇMA
+            // claims tabanlı oturum açma
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()),
@@ -148,6 +148,7 @@ namespace FloraMind_V1.Controllers
         }
 
 
+        // Hesabim - Profil Görüntüleme ve Düzenleme
 
         [HttpGet]
         public async Task<IActionResult> Hesabim()
@@ -174,6 +175,7 @@ namespace FloraMind_V1.Controllers
             return View(model);
         }
 
+        // Profil Güncelleme
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Hesabim(EditProfileViewModel model)
@@ -231,6 +233,7 @@ namespace FloraMind_V1.Controllers
         }
 
 
+        // Şifre Sıfırlama İşlemleri
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
@@ -274,6 +277,7 @@ namespace FloraMind_V1.Controllers
             return View();
         }
 
+        // doğrulama kodu gönderimi
         [HttpPost]
         public async Task<IActionResult> VerifyCode(VerifyCodeViewModel model)
         {
@@ -299,6 +303,8 @@ namespace FloraMind_V1.Controllers
             ViewBag.Email = email;
             return View();
         }
+
+        // şifre sıfırlama işlemi
         [HttpPost]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
