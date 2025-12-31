@@ -1,42 +1,119 @@
 ﻿@model FloraMind_V1.Models.Content
+
 @{
     ViewData["Title"] = "İçeriği Düzenle";
 }
-<h2>İçeriği Düzenle: @Model.Title</h2>
-<hr />
-<div class="row">
-    <div class="col-md-8">
-        <form asp-action="Edit" method="post">
-            <div asp-validation-summary="All" class="text-danger mb-3"></div>  
 
-            <input type="hidden" asp-for="ContentID" />
-            <input type="hidden" asp-for="UserID" />         
-            <input type="hidden" asp-for="DateCreated" />    
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg" style="border-radius: 20px;">
 
-            <div class="form-group mb-3">
-                <label asp-for="PlantID">İçeriğin Ait Olduğu Bitki</label>
-                <select asp-for="PlantID" class="form-control" asp-items="ViewBag.PlantID">
-                    <option value="">-- Seçiniz --</option>   
-                </select>
-                <span asp-validation-for="PlantID" class="text-danger"></span>
+                <div class="card-header bg-dark text-white py-4 text-center" style="border-radius: 20px 20px 0 0;">
+                    <div class="icon-circle bg-primary text-white mb-3 mx-auto shadow-sm">
+                        <i class="fas fa-file-signature fa-lg"></i>
+                    </div>
+                    <h3 class="mb-1">İçerik Düzenleme</h3>
+                    <p class="small mb-0 opacity-75">"@Model.Title" kaydını güncelliyorsunuz</p>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Edit" method="post">
+                        <div asp-validation-summary="All" class="alert alert-custom-danger mb-4 shadow-sm" style="@(ViewData.ModelState.IsValid ? "display:none" : "")">
+                            <i class="fas fa-exclamation-triangle me-2"></i> Lütfen hataları düzeltiniz.
+                        </div>
+
+                        <input type="hidden" asp-for="ContentID" />
+                        <input type="hidden" asp-for="UserID" />
+                        <input type="hidden" asp-for="DateCreated" />
+
+                        <div class="mb-4">
+                            <label asp-for="PlantID" class="form-label fw-bold">
+                                <i class="fas fa-leaf text-success me-2"></i>İçeriğin Ait Olduğu Bitki
+                            </label>
+                            <select asp-for="PlantID" class="form-select custom-select" asp-items="ViewBag.PlantID">
+                                <option value="">-- Bitki Seçiniz --</option>
+                            </select>
+                            <span asp-validation-for="PlantID" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Title" class="form-label fw-bold">
+                                <i class="fas fa-heading text-primary me-2"></i>İçerik Başlığı
+                            </label>
+                            <input asp-for="Title" class="form-control custom-input" placeholder="Başlık giriniz..." />
+                            <span asp-validation-for="Title" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Body" class="form-label fw-bold">
+                                <i class="fas fa-align-left text-primary me-2"></i>İçerik Metni (Detaylar)
+                            </label>
+                            <textarea asp-for="Body" class="form-control custom-input" rows="10" placeholder="Bitki bakım rehberi, sulama ipuçları vb. bilgileri buraya yazınız..."></textarea>
+                            <span asp-validation-for="Body" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <hr class="my-4 opacity-25">
+
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm py-3" style="border-radius: 12px; font-weight: 600;">
+                                    <i class="fas fa-save me-2"></i>Değişiklikleri Uygula
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                <a asp-action="Index" class="btn btn-outline-secondary btn-lg w-100 py-3 border" style="border-radius: 12px;">
+                                    İptal
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group mb-3">
-                <label asp-for="Title">İçerik Başlığı</label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group mb-4">
-                <label asp-for="Body">İçerik Metni</label>
-                <textarea asp-for="Body" class="form-control" rows="8"></textarea>
-                <span asp-validation-for="Body" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn btn-primary">Değişiklikleri Kaydet</button>
-            <a asp-action="Index" class="btn btn-secondary">İptal</a>
-        </form>
+        </div>
     </div>
 </div>
+
 @section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <style>
+        /* Custom Input & Select Tasarımı */
+        .custom-input, .custom-select {
+            border: 2px solid #f1f3f5 !important;
+            background-color: #f8f9fa !important;
+            border-radius: 12px !important;
+            padding: 0.8rem 1rem !important;
+            transition: all 0.2s ease-in-out;
+        }
+
+            .custom-input:focus, .custom-select:focus {
+                background-color: #fff !important;
+                border-color: #0d6efd !important;
+                box-shadow: 0 5px 15px rgba(13, 110, 253, 0.08) !important;
+                outline: none;
+            }
+
+        /* İkon Çemberi */
+        .icon-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hata Paneli */
+        .alert-custom-danger {
+            background-color: #fff5f5;
+            color: #e03131;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #ffc9c9;
+        }
+    </style>
 }

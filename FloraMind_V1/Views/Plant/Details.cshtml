@@ -4,36 +4,92 @@
     ViewData["Title"] = "Bitki Detayları";
 }
 
-<h2>Bitki Detayları: @Model.Name</h2>
-<hr />
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
 
-<div>
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Name)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Name)</dd>
+                <div class="card-header bg-success text-white py-4 text-center">
+                    <i class="fas fa-leaf fa-3x mb-2"></i>
+                    <h2 class="display-6 mb-0">@Model.Name</h2>
+                    <p class="lead opacity-75">Bitki Kimlik Kartı</p>
+                </div>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Species)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Species)</dd>
+                <div class="card-body p-5">
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-4">
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <img src="@Model.ImageUrl" class="img-fluid rounded shadow-sm border" alt="@Model.Name" style="max-height: 250px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <div class="bg-light d-flex align-items-center justify-content-center rounded border shadow-sm" style="height: 200px;">
+                                    <i class="fas fa-image fa-4x text-muted"></i>
+                                </div>
+                            }
+                        </div>
 
-        <dt class="col-sm-2">Eklenme Tarihi</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.DateAdded)</dd>
+                        <div class="col-md-8">
+                            <h4 class="text-success border-bottom pb-2 mb-3">Genel Bilgiler</h4>
 
-        <dt class="col-sm-2">Kime Ait?</dt>
-        <dd class="col-sm-10">
-            @if (Model.UserID.HasValue)
-            {
-                @Model.User.Name
-            }
-            else
-            {
-                
-                <span>Katalog Bitkisi (Kimseye Ait Değil)</span>
-            }
-        </dd>
-    </dl>
+                            <div class="row mb-3">
+                                <div class="col-sm-5 fw-bold text-dark">
+                                    <i class="fas fa-tag me-2 text-success"></i>@Html.DisplayNameFor(model => model.Name)
+                                </div>
+                                <div class="col-sm-7 text-secondary">@Html.DisplayFor(model => model.Name)</div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-5 fw-bold text-dark">
+                                    <i class="fas fa-dna me-2 text-success"></i>@Html.DisplayNameFor(model => model.Species)
+                                </div>
+                                <div class="col-sm-7 text-secondary">@Html.DisplayFor(model => model.Species)</div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-5 fw-bold text-dark">
+                                    <i class="fas fa-calendar-alt me-2 text-success"></i>Eklenme Tarihi
+                                </div>
+                                <div class="col-sm-7 text-secondary">@Model.DateAdded.ToString("dd MMMM yyyy")</div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-5 fw-bold text-dark">
+                                    <i class="fas fa-user-circle me-2 text-success"></i>Kime Ait?
+                                </div>
+                                <div class="col-sm-7">
+                                    @if (Model.UserID.HasValue)
+                                    {
+                                        <span class="badge bg-primary rounded-pill px-3">@Model.User.Name</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary rounded-pill px-3">Katalog Bitkisi</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4">
+                            <i class="fas fa-arrow-left me-2"></i>Listeye Dön
+                        </a>
+                        <div>
+                            <a asp-action="Edit" asp-route-id="@Model.PlantID" class="btn btn-info text-white px-4 shadow-sm">
+                                <i class="fas fa-edit me-2"></i>Düzenle
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.PlantID" class="btn btn-info">Düzenle</a> |
-    <a asp-action="Index">Katalog Listesine Geri Dön</a>
-</div>
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+}

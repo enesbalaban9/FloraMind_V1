@@ -8,25 +8,32 @@
 
 <div class="gallery-container">
     <div class="image_slider">
-        <div class="slide" style="background-image: url('@Url.Content("~/images/slide1.jpg")');">
+        <div class="slide">
+            <img src="~/images/slide1.jpg" class="slide-img blurred" alt="Akıllı Takip">
             <div class="slide-text">
                 <h2>Akıllı Takip</h2>
-                <p> Bitkilerinizi yönetin, bakımlarını takip edin</p>
+                <p>Bitkilerinizi yönetin, bakımlarını takip edin</p>
             </div>
         </div>
-        <div class="slide" style="background-image: url('@Url.Content("~/images/slide2.jpg")');">
+
+        <div class="slide">
+            <img src="~/images/slide2.jpg" class="slide-img blurred" alt="Sulama Takip">
             <div class="slide-text">
                 <h2>Sulama Takip Sistemi</h2>
                 <p>Bitkilerinizin büyüme sürecini takip edin</p>
             </div>
         </div>
-        <div class="slide" style="background-image: url('@Url.Content("~/images/slide3.jpg")');">
+
+        <div class="slide">
+            <img src="~/images/slide3.jpg" class="slide-img blurred" alt="Hatırlatma">
             <div class="slide-text">
                 <h2>Hatırlatma Sistemi</h2>
                 <p>Sulama ve bakım zamanlarını otomatik olarak planlayın.</p>
             </div>
         </div>
-        <div class="slide" style="background-image: url('@Url.Content("~/images/slide4.jpg")');">
+
+        <div class="slide">
+            <img src="~/images/slide4.jpg" class="slide-img blurred" alt="Bitki Kütüphanesi">
             <div class="slide-text">
                 <h2>Bitki Kütüphanesi</h2>
                 <p>Bitkilerinizi kaydedin, bakım geçmişini saklayın</p>
@@ -38,12 +45,19 @@
         <button type="button" id="next">
             <i class="fas fa-chevron-right"></i>
         </button>
+
         <div class="circles">
             <div class="circle"></div>
             <div class="circle"></div>
             <div class="circle"></div>
             <div class="circle"></div>
         </div>
+    </div> 
+</div> 
+<div class="content-section">
+    <div class="content-intro">
+        <h2>FloraMind ile Bitkilerinizi Yönetin</h2>
+        <p>Modern kullanıcılar, basit hatırlatmaların ötesinde dijital asistan destekli bütünsel bir bitki takip uygulaması ile bitkilerinin gelişimini takip ederek keyifle öğrenmek istemektedirler. FloraMind, tam da bu ihtiyaca yanıt veren kapsamlı bir çözümdür.</p>
     </div>
 </div>
 @section Scripts {

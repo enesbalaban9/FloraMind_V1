@@ -1,0 +1,47 @@
+﻿.row {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+    transition: opacity 0.3s ease;
+}
+
+.fade-out {
+    opacity: 0;
+}
+
+h2 {
+    font-weight: 600;
+    color: #31572C;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #31572C;
+}
+
+.form-control,
+.form-select {
+    border-radius: 8px;
+    border: 1px solid #bfc8c2;
+    padding: 10px;
+    transition: 0.25s;
+}
+
+    .form-control:focus,
+    .form-select:focus,
+    textarea:focus {
+        border-color: #31572C;
+        box-shadow: 0 0 6px rgba(49, 87, 44, 0.4);
+    }
+
+.btn-success {
+    background-color: #31572C !important;
+    border-color: #31572C !important;
+    color: #ffffff !important;
+}
+
+    .btn-success:hover {
+        background-color: #3f6b38 !important;
+        border-color: #3f6b38 !important;
+    }

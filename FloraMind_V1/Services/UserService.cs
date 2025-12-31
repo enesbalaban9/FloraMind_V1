@@ -56,26 +56,25 @@ namespace FloraMind_V1.Services
 
         public async Task<IEnumerable<User>> GetUsersAsync(string searchString = null)
         {
-            //Temel sorguyu oluştur
-            var users = _context.Users.AsQueryable();
+            var query = _context.Users.AsQueryable();
 
-            
-            if (!string.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrWhiteSpace(searchString))
             {
-                string term = searchString.Trim().ToLower();
+                var term = searchString.Trim();
+                bool isNumeric = int.TryParse(term, out int userId);
 
-                users = users.Where(u =>
-                    // Kullanıcı adını içeriyor mu?
-                    u.Name.ToLower().Contains(term) ||
-                    // ID ile eşleşiyor mu?
-                    u.UserID.ToString().Equals(term)
+                // Name içinde arama yap VEYA ID ile tam eşleşme ara
+                query = query.Where(u =>
+                    EF.Functions.Like(u.Name, $"%{term}%") ||
+                    (isNumeric && u.UserID == userId)
                 );
             }
 
-            return await users.ToListAsync();
+            return await query.OrderByDescending(u => u.RegistrationDate).ToListAsync();
         }
 
-       
+
+
 
         public async Task ToggleBanStatusAsync(int userId, bool isBanned)
         {

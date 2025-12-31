@@ -1,0 +1,54 @@
+﻿@using Microsoft.EntityFrameworkCore
+@model FloraMind_V1.Models.Plant
+
+@inject FloraMind_V1.Data.FloraMindDbContext _context
+
+@{
+    ViewData["Title"] = Model.Name;
+
+    // Sayfa yüklenirken bu bitkinin ID'sine ait Content'i buluyoruz
+    var bitkiIcerigi = _context.Contents.FirstOrDefault(c => c.PlantID == Model.PlantID);
+}
+
+<div class="container mt-5 mb-5">
+    <div class="card shadow-lg border-0" style="border-radius: 15px; overflow: hidden;">
+        <div class="row g-0">
+
+            <div class="col-md-5">
+                <img src="~/images/@Model.ImageUrl"
+                     alt="@Model.Name"
+                     class="img-fluid h-100 w-100"
+                     style="object-fit: cover; min-height: 400px;">
+            </div>
+
+            <div class="col-md-7">
+                <div class="card-body p-5 d-flex flex-column justify-content-center h-100">
+
+                    <h1 class="fw-bold text-success mb-4">
+                        @(bitkiIcerigi != null ? bitkiIcerigi.Title : Model.Name)
+                    </h1>
+
+                    <div class="description-content">
+                        <p class="lead text-secondary" style="line-height: 1.8; font-size: 1.1rem;">
+                            @if (bitkiIcerigi != null)
+                            {
+                                @bitkiIcerigi.Body
+                            }
+                            else
+                            {
+                                <span class="text-muted">Bu bitki için henüz detaylı içerik girilmemiş.</span>
+                            }
+                        </p>
+                    </div>
+
+                    <div class="mt-4">
+                        <a asp-action="ShowCatalog" class="btn btn-outline-success rounded-pill px-4">
+                            <i class="fas fa-arrow-left me-2"></i> Kataloga Dön
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

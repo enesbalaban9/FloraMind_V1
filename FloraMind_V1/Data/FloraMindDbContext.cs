@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using FloraMind_V1.Models;
+using FloraMind_V1.Models.Login;
 
 namespace FloraMind_V1.Data
 {
@@ -13,6 +14,8 @@ namespace FloraMind_V1.Data
         public DbSet<Plant> Plants { get; set; }
         public DbSet<Content> Contents { get; set; }
         public DbSet<UserPlant> UserPlants { get; set; }
+        public DbSet<ForgotPassword> ForgottenPasswords { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) // Veritabanı ilişkilerini tanımlama
@@ -58,9 +61,15 @@ namespace FloraMind_V1.Data
                 .HasForeignKey(up => up.UserID)
                 .OnDelete(DeleteBehavior.Cascade); // Kullanıcı silinirse koleksiyon kayıtları silinir
 
-            
+            modelBuilder.Entity<UserPlant>()
+        .HasOne(up => up.Plant)          // Her UserPlant'in bir Plant'i vardır
+        .WithMany(p => p.UserPlants)     // Her Plant'in birden fazla UserPlant kaydı olabilir
+        .HasForeignKey(up => up.PlantID) // Yabancı anahtar PlantId sütunudur
+        .OnDelete(DeleteBehavior.Cascade);
+
+
             //Plant-UserPlant İlişkisi
-            
+
             modelBuilder.Entity<UserPlant>()
                 .HasOne(up => up.Plant)
                 

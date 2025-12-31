@@ -1,0 +1,65 @@
+﻿@model IEnumerable<FloraMind_V1.Models.Plant>
+@{
+    ViewData["Title"] = "Bitki Kataloğu";
+}
+
+<link rel="stylesheet" href="~/css/ShowCatalog.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+<h2 class="page-title">Bitki Kataloğu</h2>
+
+<div class="filter-container">
+    <form asp-action="Index" method="get" class="search-form">
+        <div class="search-group">
+            <div class="search-input">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" name="searchName" value="@Context.Request.Query["searchName"]" placeholder="Bitki ismi ile ara...">
+            </div>
+            <div class="search-input">
+                <i class="fas fa-leaf search-icon"></i>
+                <input type="text" name="searchSpecies" value="@Context.Request.Query["searchSpecies"]" placeholder="Türe göre ara (Örn: Sukulent)...">
+            </div>
+            <button type="submit" class="filter-btn">
+                <i class="fas fa-filter"></i> FİLTRELE
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="card-container">
+    @if (!Model.Any())
+    {
+        <p class="no-results">Aradığınız kriterlere uygun bitki bulunamadı.</p>
+    }
+    @foreach (var item in Model)
+    {
+        <div class="plant-card">
+            <div class="image-wrapper">
+                <img src="~/images/@item.ImageUrl" alt="@item.Name">
+            </div>
+
+            <div class="card-body">
+                <div class="card-main-info">
+                    <h3>@item.Name</h3>
+                    <ul>
+                        <li><strong>Tür:</strong> @item.Species</li>
+                    </ul>
+                </div>
+                <button class="info-btn" type="button">
+                    <i class="fas fa-info"></i>
+                </button>
+            </div>
+            <div class="card-info">
+                <div class="card-info-content">
+                    <form asp-controller="UserPlants" asp-action="Add" method="post">
+                        <input type="hidden" name="plantId" value="@item.PlantID" />
+                        <div class="card-buttons">
+                            <a asp-controller="Catalog" asp-action="Details" asp-route-id="@item.PlantID" class="info-btn2" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">BİLGİ</a>
+                            <button type="submit" class="save-btn">BİTKİLERİME KAYDET</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>

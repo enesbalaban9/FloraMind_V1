@@ -4,39 +4,112 @@
     ViewData["Title"] = "Bitki Düzenle";
 }
 
-<h2>@Model.Name Düzenle</h2>
-<hr />
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card border-0 shadow-lg" style="border-radius: 20px;">
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="card-header bg-primary text-white py-4 text-center" style="border-radius: 20px 20px 0 0;">
+                    <div class="icon-circle bg-white text-primary mb-3 mx-auto shadow-sm">
+                        <i class="fas fa-pen-nib fa-lg"></i>
+                    </div>
+                    <h3 class="mb-1">Bitki Güncelleme</h3>
+                    <p class="small mb-0 opacity-75">Sistem ID: #@Model.PlantID</p>
+                </div>
 
-            <input type="hidden" asp-for="PlantID" />
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-custom-danger d-flex align-items-center mb-4" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <div>Lütfen formdaki eksikleri kontrol ediniz.</div>
+                        </div>
 
-            <div class="form-group">
-                <label asp-for="Name">Bitki Adı (Ortak)</label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                        <input type="hidden" asp-for="PlantID" />
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Name" class="form-control custom-input" placeholder="Bitki Adı" />
+                            <label asp-for="Name">
+                                <i class="fas fa-leaf text-primary me-2"></i>Bitki Adı (Ortak Ad)
+                            </label>
+                            <span asp-validation-for="Name" class="text-danger x-small mt-1 d-block"></span>
+                            <div class="form-text text-muted small px-1">Örn: Salon Sarmaşığı, Deve Tabanı...</div>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Species" class="form-control custom-input" placeholder="Bitki Türü" />
+                            <label asp-for="Species">
+                                <i class="fas fa-dna text-primary me-2"></i>Bitki Türü (Bilimsel Ad)
+                            </label>
+                            <span asp-validation-for="Species" class="text-danger x-small mt-1 d-block"></span>
+                            <div class="form-text text-muted small px-1">Örn: Epipremnum aureum, Monstera deliciosa...</div>
+                        </div>
+
+                        <hr class="my-4 opacity-25">
+
+                        <div class="row g-2">
+                            <div class="col-8">
+                                <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm py-3" style="border-radius: 12px; font-weight: 600;">
+                                    <i class="fas fa-check-circle me-2"></i>Güncellemeyi Kaydet
+                                </button>
+                            </div>
+                            <div class="col-4">
+                                <a asp-action="Index" class="btn btn-outline-light btn-lg w-100 py-3 text-secondary border" style="border-radius: 12px;">
+                                    İptal
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label asp-for="Species">Bitki Türü (Bilimsel)</label>
-                <input asp-for="Species" class="form-control" />
-                <span asp-validation-for="Species" class="text-danger"></span>
-            </div>
-
-            <button type="submit" class="btn btn-primary mt-3">Kaydet</button>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Katalog Listesine Geri Dön</a>
-</div>
-
 @section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <style>
+        /* Modern Input Tasarımı: Floating Labels */
+        .custom-input {
+            border: 2px solid #f1f3f5 !important;
+            background-color: #f8f9fa !important;
+            border-radius: 12px !important;
+            padding: 1.2rem 0.75rem !important;
+            transition: all 0.3s ease;
+        }
+
+            .custom-input:focus {
+                background-color: #fff !important;
+                border-color: #0d6efd !important;
+                box-shadow: 0 8px 20px rgba(13, 110, 253, 0.1) !important;
+            }
+
+        /* İkon Çemberi */
+        .icon-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hata Mesajları Paneli */
+        .alert-custom-danger {
+            background-color: #fff5f5;
+            color: #e03131;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            padding: 10px 15px;
+            border: 1px solid #ffc9c9;
+        }
+
+        .x-small {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+    </style>
 }

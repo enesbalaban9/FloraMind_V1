@@ -4,23 +4,49 @@
     ViewData["Title"] = "Bitki Silme Onayı";
 }
 
-<h2>Silme Onayı</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-lg" style="border-radius: 15px;">
+                <div class="card-header bg-danger text-white text-center py-4" style="border-radius: 15px 15px 0 0;">
+                    <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                    <h3 class="mb-0">Silme Onayı</h3>
+                </div>
 
-<h3>Bu bitki kaydını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.</h3>
-<hr />
+                <div class="card-body p-4">
+                    <p class="text-center text-muted mb-4">
+                        Bu bitki kaydını silmek istediğinizden emin misiniz? <br>
+                        <strong>Bu işlem geri alınamaz ve bu bitkiyi ekleyen tüm kullanıcıların listesinden silinecektir.</strong>
+                    </p>
 
-<div>
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Name)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Name)</dd>
+                    <div class="bg-light p-3 rounded mb-4">
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold text-dark">Bitki Adı:</div>
+                            <div class="col-sm-8 text-secondary">@Model.Name</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4 fw-bold text-dark">Tür:</div>
+                            <div class="col-sm-8 text-secondary">@Model.Species</div>
+                        </div>
+                    </div>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Species)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Species)</dd>
-    </dl>
-
-    <form asp-action="Delete" method="post">
-        <input type="hidden" asp-for="PlantID" />
-        <button type="submit" class="btn btn-danger">Sil</button> |
-        <a asp-action="Index">İptal ve Geri Dön</a>
-    </form>
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="PlantID" />
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg shadow-sm">
+                                <i class="fas fa-trash-alt me-2"></i> Kalıcı Olarak Sil
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i> Vazgeç ve Geri Dön
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+}

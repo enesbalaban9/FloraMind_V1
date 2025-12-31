@@ -1,0 +1,111 @@
+﻿.page-title {
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 26px;
+    color: #333;
+}
+
+.plant-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+
+.plant-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+    .plant-card img {
+        width: 100%;
+        height: 240px;
+        object-fit: cover;
+        display: block;
+        background-color: #f8f9fa;
+        margin: 0;
+    }
+
+.card-body {
+    padding: 24px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+    .card-body h3 {
+        text-align: center;
+        margin: 0 0 12px 0;
+        font-size: 25px;
+        color: #2d3436;
+    }
+
+
+    .card-body h4 {
+        display: flex;
+        align-items: center;
+        padding: 5px 0;
+        margin: 0 0 15px 0;
+        font-size: 20px;
+        color: #555;
+        font-weight: normal;
+    }
+
+        .card-body h4 strong {
+            color: #333;
+            margin-right: 10px;
+            min-width: 50px;
+            flex-shrink: 0;
+        }
+
+
+.content-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+    .content-item strong {
+        min-width: 100px;
+        margin-right: 10px;
+        color: #333;
+        flex-shrink: 0;
+    }
+
+    .content-item p {
+        margin: 0;
+        color: #444;
+        font-size: 16px;
+        line-height: 1.5;
+    }
+
+
+.no-content {
+    color: #999;
+    font-style: italic;
+    text-align: center;
+    margin: 8px 0;
+    font-size: 15px;
+}
+
+.btn-danger {
+    width: 100%;
+    padding: 9px;
+    background: white;
+    color: #dc3545;
+    border: 2px solid #dc3545;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: auto;
+}
+
+    .btn-danger:hover {
+        background: #dc3545;
+        color: white;
+    }
